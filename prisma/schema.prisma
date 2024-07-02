@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Port {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  portName  String
+  datas     Data[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Data {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId         String
+  portId         String   @db.ObjectId
+  port           Port     @relation(fields: [portId], references: [id])
+  shipper        String
+  consignee      String
+  shipowner      String
+  vesselName     String
+  vesselType     String
+  built          DateTime
+  imoNumber      Int
+  imoClasses     String
+  flag           String
+  cargoQty       Int
+  cargoType      String
+  nor            DateTime
+  gt             Int
+  nt             Int
+  dwt            Int
+  loa            Int
+  beam           Int
+  classification String
+  activity       String
+  master         String
+  nationality    String
+  statusData     String   @default("new")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
