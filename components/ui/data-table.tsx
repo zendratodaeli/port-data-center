@@ -16,7 +16,7 @@ import { Input } from "./input";
 import * as XLSX from "xlsx";
 import axios from "axios";
 import DOMPurify from "dompurify";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
@@ -64,7 +64,6 @@ export function DataTable<TData, TValue>({
 
   useEffect(() => {
     setIsMounted(true);
-    // Set initial date filter to current date
     setDateFilter(format(new Date(), "yyyy-MM-dd"));
   }, []);
 
@@ -107,15 +106,21 @@ export function DataTable<TData, TValue>({
           const workbook = XLSX.read(data, { type: "binary" });
           const sheetName = workbook.SheetNames[0];
           const workSheet = workbook.Sheets[sheetName];
-          const json = XLSX.utils.sheet_to_json(workSheet);
+          const json = XLSX.utils.sheet_to_json(workSheet, { raw: false, dateNF: 'yyyy-mm-dd' });
+
+          const parsedJson = json.map((item: any) => ({
+            ...item,
+            built: parseExcelDate(item.built),
+            nor: parseExcelDate(item.nor),
+            imoNumber: parseInt(item.imoNumber, 10), // Ensure imoNumber is an integer
+          }));
 
           try {
-            await axios.post('/api/data-upload', json);
+            await axios.post('/api/data-upload', parsedJson);
             toast.success('Data uploaded successfully');
 
             router.push(`/data`);
             router.refresh();
-
           } catch (error) {
             console.error("Error uploading data:", error);
             toast.error('Error uploading data');
@@ -126,6 +131,20 @@ export function DataTable<TData, TValue>({
       };
       reader.readAsBinaryString(file);
     }
+  };
+
+  const parseExcelDate = (excelDate: string | number) => {
+    if (typeof excelDate === 'number' && !isNaN(excelDate)) {
+      const date = new Date(Math.round((excelDate - 25569) * 864e5));
+      return date.toISOString().split('T')[0];
+    }
+    if (typeof excelDate === 'string') {
+      const date = parse(excelDate, 'yyyy-MM-dd', new Date());
+      if (!isNaN(date.getTime())) {
+        return date.toISOString().split('T')[0];
+      }
+    }
+    return excelDate;  // Return as is if invalid
   };
 
   return (

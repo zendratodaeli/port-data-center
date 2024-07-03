@@ -1,3 +1,4 @@
+
 import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
@@ -24,17 +25,17 @@ export async function POST(req: Request) {
       vesselName: item.vesselName,
       vesselType: item.vesselType,
       built: new Date(item.built).toISOString(),
-      imoNumber: item.imoNumber,
+      imoNumber: parseInt(item.imoNumber, 10),
       imoClasses: item.imoClasses,
       flag: item.flag,
-      cargoQty: item.cargoQty,
+      cargoQty: parseInt(item.cargoQty, 10),
       cargoType: item.cargoType,
       nor: new Date(item.nor).toISOString(),
-      gt: item.gt,
-      nt: item.nt,
-      dwt: item.dwt,
-      loa: item.loa,
-      beam: item.beam,
+      gt: parseInt(item.gt, 10),
+      nt: parseInt(item.nt, 10),
+      dwt: parseInt(item.dwt, 10),
+      loa: parseInt(item.loa, 10),
+      beam: parseInt(item.beam, 10),
       classification: item.classification,
       activity: item.activity,
       master: item.master,
