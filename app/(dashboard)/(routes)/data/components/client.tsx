@@ -28,6 +28,7 @@ const DataClient: React.FC<DataClientProps> = ({ data }) => {
           onClick={() =>
             router.push(`/data/new`)
           }
+          className="  md:w-[150px]"
         >
           <Plus className=" mr-2 h-4 w-4" />
           Add Data

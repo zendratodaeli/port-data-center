@@ -10,7 +10,14 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Button } from "./button";
 import { Input } from "./input";
 import * as XLSX from "xlsx";
@@ -19,6 +26,15 @@ import DOMPurify from "dompurify";
 import { format, parse } from "date-fns";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { Plus } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -34,7 +50,9 @@ export function DataTable<TData, TValue>({
   dateKey,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [dateFilter, setDateFilter] = useState<string | undefined>(format(new Date(), "yyyy-MM-dd"));
+  const [dateFilter, setDateFilter] = useState<string | undefined>(
+    format(new Date(), "yyyy-MM-dd")
+  );
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -106,7 +124,10 @@ export function DataTable<TData, TValue>({
           const workbook = XLSX.read(data, { type: "binary" });
           const sheetName = workbook.SheetNames[0];
           const workSheet = workbook.Sheets[sheetName];
-          const json = XLSX.utils.sheet_to_json(workSheet, { raw: false, dateNF: 'yyyy-mm-dd' });
+          const json = XLSX.utils.sheet_to_json(workSheet, {
+            raw: false,
+            dateNF: "yyyy-mm-dd",
+          });
 
           const parsedJson = json.map((item: any) => ({
             ...item,
@@ -116,14 +137,14 @@ export function DataTable<TData, TValue>({
           }));
 
           try {
-            await axios.post('/api/data-upload', parsedJson);
-            toast.success('Data uploaded successfully');
+            await axios.post("/api/data-upload", parsedJson);
+            toast.success("Data uploaded successfully");
 
             router.push(`/data`);
             router.refresh();
           } catch (error) {
             console.error("Error uploading data:", error);
-            toast.error('Error uploading data');
+            toast.error("Error uploading data");
           } finally {
             setLoading(false);
           }
@@ -134,45 +155,74 @@ export function DataTable<TData, TValue>({
   };
 
   const parseExcelDate = (excelDate: string | number) => {
-    if (typeof excelDate === 'number' && !isNaN(excelDate)) {
+    if (typeof excelDate === "number" && !isNaN(excelDate)) {
       const date = new Date(Math.round((excelDate - 25569) * 864e5));
-      return date.toISOString().split('T')[0];
+      return date.toISOString().split("T")[0];
     }
-    if (typeof excelDate === 'string') {
-      const date = parse(excelDate, 'yyyy-MM-dd', new Date());
+    if (typeof excelDate === "string") {
+      const date = parse(excelDate, "yyyy-MM-dd", new Date());
       if (!isNaN(date.getTime())) {
-        return date.toISOString().split('T')[0];
+        return date.toISOString().split("T")[0];
       }
     }
-    return excelDate;  // Return as is if invalid
+    return excelDate;
   };
 
   return (
-    <div>
-      <div className="flex items-center py-4 space-x-4">
+    <div className="">
+      <div className="grid grid-cols-1 w-full md:grid-cols-3 py-4 gap-2">
         <Input
           placeholder="Search by vessel's name"
           value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn(searchKey)?.setFilterValue(event.target.value)
           }
-          className="w-full sm:w-[310px] hover:w-[500px] transition"
+          className="w-full md:w-[400px]"
         />
-        <Input
-          type="date"
-          value={dateFilter ?? ""}
-          onChange={handleDateChange}
-          className="w-full sm:w-[210px]"
-        />
-        <Input
-          type="file"
-          accept=".xls,.xlsx"
-          onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
-        />
-        <Button onClick={handleFileUpload} className="bg-purple-400" disabled={loading}>
-          {loading ? "On progress..." : "Import Data"}
-        </Button>
+        <div className=" md:flex justify-center">
+          <Input
+            type="date"
+            value={dateFilter ?? ""}
+            onChange={handleDateChange}
+            className="w-[144px]"
+          />
+        </div>
+        <div className="flex flex-row-reverse gap-2">
+          <Dialog>
+            <DialogTrigger>
+              <Button>Import XLS</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle className="text-center">
+                  Importing Data
+                </DialogTitle>
+                <DialogDescription>
+                  <div className="flex justify-between gap-2 mt-5">
+                    <Input
+                      type="file"
+                      accept=".xls,.xlsx"
+                      onChange={(e) =>
+                        setFile(e.target.files ? e.target.files[0] : null)
+                      }
+                      className="w-full"
+                    />
+                    <Button
+                      onClick={handleFileUpload}
+                      disabled={loading}
+                      className=" w-[150px]"
+                    >
+                      <Plus className=" mr-2 h-4 w-4" />
+                      {loading ? "On progress..." : " Upload Data"}
+                    </Button>
+                  </div>
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
+
       <div className="rounded-md border w-full">
         <Table className="whitespace-nowrap">
           <TableHeader>
@@ -207,7 +257,10 @@ export function DataTable<TData, TValue>({
                           )}
                         />
                       ) : (
-                        flexRender(cell.column.columnDef.cell, cell.getContext())
+                        flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )
                       )}
                     </TableCell>
                   ))}

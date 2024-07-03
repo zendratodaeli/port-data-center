@@ -14,10 +14,10 @@ export default async function Navbar() {
 
   return (
     <div className=" border-b">
-        <div className="flex h-16 items-center px-1">
-          <MainNav className=" mx-6" />
+        <div className="flex h-16 items-center">
+          <MainNav />
           <MobileSidebar />
-          <div className=" ml-auto flex items-center space-x-4">
+          <div className=" ml-auto flex items-center space-x-4 lg:space-x-6 mx-4">
             <Button variant={"outline"}>
               <SignOutButton />
             </Button>

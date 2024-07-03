@@ -24,7 +24,7 @@ export const MainNav = ({
   ]
   return (
     <nav
-      className={cn(" hidden md:flex mx-6 items-center space-x-4 lg:space-x-6", className)}
+      className={cn(" hidden md:flex mx-4 items-center space-x-4 lg:space-x-6", className)}
     > 
       <div>
         <h1 className=" text-2xl text-muted-foreground hover:text-primary font-bold border-r-2 pr-4 lg:pr-6">Port Data-Center</h1>
