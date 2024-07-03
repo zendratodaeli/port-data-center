@@ -124,7 +124,7 @@ export async function DELETE(
         id: params.dataId,
       },
     });
-
+    
     return NextResponse.json(category);
   } catch (error) {
     console.log("[category_delete]", error);

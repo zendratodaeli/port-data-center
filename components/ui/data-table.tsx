@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState, useEffect } from "react";
 import {
@@ -10,18 +10,15 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "./button";
 import { Input } from "./input";
+import * as XLSX from "xlsx";
+import axios from "axios";
 import DOMPurify from "dompurify";
 import { format } from "date-fns";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -38,6 +35,10 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [dateFilter, setDateFilter] = useState<string | undefined>(format(new Date(), "yyyy-MM-dd"));
+  const [file, setFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
 
   const rowNumberColumn: ColumnDef<TData, TValue> = {
     id: "rowNumber",
@@ -78,11 +79,11 @@ export function DataTable<TData, TValue>({
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setDateFilter(value);
-    
+
     if (value) {
       const parsedDate = new Date(value);
       const formattedDate = format(parsedDate, "MMMM do, yyyy");
-      
+
       setColumnFilters((old) => {
         const newFilters = old.filter((filter) => filter.id !== dateKey);
         newFilters.push({
@@ -95,7 +96,38 @@ export function DataTable<TData, TValue>({
       setColumnFilters((old) => old.filter((filter) => filter.id !== dateKey));
     }
   };
-  
+
+  const handleFileUpload = async () => {
+    if (file) {
+      setLoading(true);
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const data = e.target?.result;
+        if (data) {
+          const workbook = XLSX.read(data, { type: "binary" });
+          const sheetName = workbook.SheetNames[0];
+          const workSheet = workbook.Sheets[sheetName];
+          const json = XLSX.utils.sheet_to_json(workSheet);
+
+          try {
+            await axios.post('/api/data-upload', json);
+            toast.success('Data uploaded successfully');
+
+            router.push(`/data`);
+            router.refresh();
+
+          } catch (error) {
+            console.error("Error uploading data:", error);
+            toast.error('Error uploading data');
+          } finally {
+            setLoading(false);
+          }
+        }
+      };
+      reader.readAsBinaryString(file);
+    }
+  };
+
   return (
     <div>
       <div className="flex items-center py-4 space-x-4">
@@ -105,14 +137,22 @@ export function DataTable<TData, TValue>({
           onChange={(event) =>
             table.getColumn(searchKey)?.setFilterValue(event.target.value)
           }
-          className="w-full sm:w-[310px]"
+          className="w-full sm:w-[310px] hover:w-[500px] transition"
         />
         <Input
           type="date"
           value={dateFilter ?? ""}
           onChange={handleDateChange}
-          className="w-full sm:w-[150px]"
+          className="w-full sm:w-[210px]"
         />
+        <Input
+          type="file"
+          accept=".xls,.xlsx"
+          onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
+        />
+        <Button onClick={handleFileUpload} className="bg-purple-400" disabled={loading}>
+          {loading ? "On progress..." : "Import Data"}
+        </Button>
       </div>
       <div className="rounded-md border w-full">
         <Table className="whitespace-nowrap">
@@ -185,12 +225,6 @@ export function DataTable<TData, TValue>({
         >
           Next
         </Button>
-        <span className="flex items-center gap-1">
-          <div>Page</div>
-          <strong>
-            {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
-          </strong>
-        </span>
       </div>
     </div>
   );
