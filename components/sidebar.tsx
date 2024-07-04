@@ -1,41 +1,47 @@
-"use client"
+"use client";
 
-import { Montserrat } from "next/font/google"
-import Image from "next/image"
-import Link from "next/link"
+import { Montserrat } from "next/font/google";
+import Image from "next/image";
+import Link from "next/link";
 
-import { cn } from "@/lib/utils"
-import { Database, HomeIcon, LayoutDashboard } from "lucide-react"
-import { usePathname } from "next/navigation"
-import { useUser } from "@clerk/nextjs"
-import { Separator } from "./ui/separator"
+import { cn } from "@/lib/utils";
+import { Database, HomeIcon, LayoutDashboard } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
+import { Separator } from "./ui/separator";
 
 const montserrat = Montserrat({
   weight: "600",
-  subsets: ["latin"]
-})
+  subsets: ["latin"],
+});
 
 const SideBar = () => {
   const pathname = usePathname();
   const { user } = useUser();
-    const userId = user?.id;
-    const listAdminId = ["user_2il1XkfhJFtxhMslrBq1JK6PapV"]; // Assuming listAdminId is an array
-  
+  const userId = user?.id;
+  const listAdminId = [
+    { adminId1: "user_2il1XkfhJFtxhMslrBq1JK6PapV" },
+    { adminId2: "user_2il3sWCyhA35P1GvOuVsaPEsyrr" },
+  ];
+  const isAdmin = listAdminId.some((admin) =>
+    Object.values(admin).includes(userId)
+  );
+
   const routes = [
     {
       label: "Data",
       icon: Database,
       href: "/data",
-      color: "text-black"
+      color: "text-black",
     },
-  ]
+  ];
 
-  if (userId && listAdminId.includes(userId)) {
+  if (userId && isAdmin) {
     routes.unshift({
       href: `/dashboard`,
-      label: 'Dashboard',
+      label: "Dashboard",
       icon: Database,
-      color: "text-black"
+      color: "text-black",
     });
   }
 
@@ -43,16 +49,27 @@ const SideBar = () => {
     <div className="space-y-4 py-4 flex flex-col h-full bg-slate-50 text-black">
       <div className="px-3 py-2 flex-1">
         <Link href="/" className="flex items-center mb-5">
-          <h1 className={cn("text-2xl text-muted-foreground hover:text-black font-bold", montserrat.className)}>Port Data Center</h1>
+          <h1
+            className={cn(
+              "text-2xl text-muted-foreground hover:text-black font-bold",
+              montserrat.className
+            )}
+          >
+            Port Data Center
+          </h1>
         </Link>
-        <Separator/>
+        <Separator />
         <div className=" mt-2 space-y-1">
-          {routes.map(route => (
-            <Link 
+          {routes.map((route) => (
+            <Link
               href={route.href}
               key={route.href}
-              className={cn("text-normal p-5 group flex w-full justify-start font-medium cursor-pointer hover:text-black hover:font-bold hover:bg-slate-200 hover:rounded-md transition", 
-              pathname === route.href ? "text-black bg-slate-300 rounded-md" : "text-zinc-700" )}  
+              className={cn(
+                "text-normal p-5 group flex w-full justify-start font-medium cursor-pointer hover:text-black hover:font-bold hover:bg-slate-200 hover:rounded-md transition",
+                pathname === route.href
+                  ? "text-black bg-slate-300 rounded-md"
+                  : "text-zinc-700"
+              )}
             >
               <div className="flex items-center flex-1">
                 <route.icon className={cn("h-5 w-5 mr-3", route.color)} />
@@ -62,8 +79,8 @@ const SideBar = () => {
           ))}
         </div>
       </div>
-    </div>  
-  )
-}
+    </div>
+  );
+};
 
-export default SideBar
+export default SideBar;

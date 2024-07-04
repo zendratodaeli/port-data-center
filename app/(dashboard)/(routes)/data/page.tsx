@@ -1,8 +1,8 @@
-import { format } from 'date-fns';
-import prisma from '@/lib/prismadb';
-import { auth } from '@clerk/nextjs/server';
-import DataClient from './components/client';
-import { DataColumn } from './components/columns';
+import { format } from "date-fns";
+import prisma from "@/lib/prismadb";
+import { auth } from "@clerk/nextjs/server";
+import DataClient from "./components/client";
+import { DataColumn } from "./components/columns";
 
 const DataPage = async () => {
   const { userId } = auth();
@@ -10,37 +10,44 @@ const DataPage = async () => {
   if (!userId) {
     return (
       <div className="p-8 pt-6">
-        <p>You must be logged in!</p>
+        <p className="text-center">You must be logged in!</p>
       </div>
     );
   }
 
-  const listAdminId = "user_2il1XkfhJFtxhMslrBq1JK6PapV";
+  const listAdminId = [
+    { adminId1: "user_2il1XkfhJFtxhMslrBq1JK6PapV" },
+    { adminId2: "user_2il3sWCyhA35P1GvOuVsaPEsyrr" },
+  ];
+
+  const isAdmin = listAdminId.some((admin) =>
+    Object.values(admin).includes(userId)
+  );
 
   let data;
-  
-  if (userId === listAdminId) {
+
+  if (userId && isAdmin) {
     // Fetch all data if the user is the list admin
     data = await prisma.data.findMany({
       include: {
-        port: true
+        port: true,
       },
       orderBy: {
-        createdAt: 'desc'
-      }
+        createdAt: "desc",
+      },
     });
   } else {
     // Fetch only the data created by the authenticated user
     data = await prisma.data.findMany({
       where: {
-        userId: userId
+        userId: userId,
       },
       include: {
-        port: true
+        port: true,
       },
       orderBy: {
-        createdAt: 'desc'
-      }
+        createdAt: "desc",
+      },
     });
   }
 
@@ -72,8 +79,8 @@ const DataPage = async () => {
   }));
 
   return (
-    <div className='flex-col'>
-      <div className='flex-1 space-y-4 p-8 pt-6'>
+    <div className="flex-col">
+      <div className="flex-1 space-y-4 p-8 pt-6">
         <DataClient data={formattedData} />
       </div>
     </div>

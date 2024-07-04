@@ -8,7 +8,7 @@ const LandingLayout = ({
 }) => {
   
   return (
-    <main>
+    <main className=' bg-gradient-to-r from-slate-100 to-white'>
       {children}
     </main>
   )

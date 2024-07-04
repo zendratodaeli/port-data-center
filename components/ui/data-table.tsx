@@ -91,10 +91,6 @@ export function DataTable<TData, TValue>({
     setFilteredData(table.getFilteredRowModel().rows.map((row) => row.original));
   }, [columnFilters, table]);
 
-  if (!isMounted) {
-    return null;
-  }
-
   const createMarkup = (htmlContent: string) => {
     return { __html: DOMPurify.sanitize(htmlContent) };
   };
@@ -173,6 +169,10 @@ export function DataTable<TData, TValue>({
     }
     return excelDate;
   };
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <div>

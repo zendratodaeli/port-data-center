@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import NavbarLadingPage from "@/components/navbar-landing-page";
 import { Button } from "@/components/ui/button";
@@ -6,14 +6,15 @@ import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 import { useRef } from "react";
-import { motion } from "framer-motion"
+import { motion } from "framer-motion";
+import TypewriterComponent from "typewriter-effect";
 
 const LandingPageComponent = () => {
-  const ref = useRef<HTMLDivElement>(null)
+  const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["0 1", "1.33 1"]
-  })
+    offset: ["0 1", "1.33 1"],
+  });
 
   const scaleProgress = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
   const opacityProgress = useTransform(scrollYProgress, [0, 1], [0.6, 1]);
@@ -26,9 +27,7 @@ const LandingPageComponent = () => {
         </div>
         <div className="flex flex-col items-center justify-center w-[350px] bg-slate-900 absolute z-50 bottom-32 top-32 shadow-2xl left-20 border-spacing-2 rounded-tl-3xl rounded-br-3xl">
           <div>
-            <p className=" text-5xl text-white text-center">
-              Port Data Center
-            </p>
+            <p className=" text-5xl text-white text-center">Port Data Center</p>
             <NavbarLadingPage />
           </div>
         </div>
@@ -40,19 +39,25 @@ const LandingPageComponent = () => {
             <p className="text-7xl font-serif font-bold">
               {"Let's"} collect the data from the vessel
             </p>
-            <p className=" text-4xl font-serif">
-              Effortlessly, efficiently, and effectively
-            </p>
+            <div className=" text-4xl font-serif">
+              <TypewriterComponent
+                options={{
+                  strings: ["Effortlessly", "Efficiently,", "and Effectively."],
+                  autoStart: true,
+                  loop: true,
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      <motion.div 
-        ref={ref} 
+      <motion.div
+        ref={ref}
         className=" h-screen"
         style={{
           scale: scaleProgress,
-          opacity: scrollYProgress
+          opacity: scrollYProgress,
         }}
       >
         <main className="flex-grow container mx-auto p-6">
@@ -80,21 +85,21 @@ const LandingPageComponent = () => {
       </motion.div>
 
       <div className=" flex justify-center mb-10">
-            <div>
-              <SignedOut>
-                <Button>
-                  <Link href={"/dashboard"}>Get started</Link>
-                </Button>
-              </SignedOut>
-            </div>
-            <div>
-              <SignedIn>
-                <Button>
-                  <Link href={"/sign-in"}>Go to dashboard</Link>
-                </Button>
-              </SignedIn>
-            </div>
-          </div>
+        <div>
+          <SignedOut>
+            <Button>
+              <Link href={"/dashboard"}>Get started</Link>
+            </Button>
+          </SignedOut>
+        </div>
+        <div>
+          <SignedIn>
+            <Button>
+              <Link href={"/sign-in"}>Go to Data</Link>
+            </Button>
+          </SignedIn>
+        </div>
+      </div>
     </div>
   );
 };
