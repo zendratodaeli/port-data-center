@@ -6,11 +6,13 @@ import { format } from "date-fns";
 interface VesselAndPortCard {
   totalVessel: number;
   totalPort: number;
+  currentVessel: number
 }
 
-const VesselAndPortCard = ({totalVessel, totalPort}: VesselAndPortCard) => {
+const VesselAndPortCard = ({totalVessel, totalPort, currentVessel}: VesselAndPortCard) => {
   return (
     <div className=" flex-col">
+      <h1> {format(new Date(), "MMMM do, yyyy")}</h1>
       <div className=" flex-1 space-y-4 ">
         <Heading title="Port Performance" description="Analyzing the productivity of the port" />
         <Separator />
@@ -18,7 +20,7 @@ const VesselAndPortCard = ({totalVessel, totalPort}: VesselAndPortCard) => {
           <Card>
             <CardHeader className=" text-sm font-medium">
               <CardTitle className="flex flex-row items-center justify-between space-y-0 pb-2">
-                Total Vessel
+                Total Vessels
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -28,15 +30,24 @@ const VesselAndPortCard = ({totalVessel, totalPort}: VesselAndPortCard) => {
           <Card>
             <CardHeader className=" text-sm font-medium">
               <CardTitle className="flex flex-row items-center justify-between space-y-0 pb-2">
-                Total Port
+                Total Ports
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className=" text-2xl font-bold">{totalPort}</div>
             </CardContent>
           </Card>
+          <Card>
+            <CardHeader className=" text-sm font-medium">
+              <CardTitle className="flex flex-row items-center justify-between space-y-0 pb-2">
+                Current Vessels
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className=" text-2xl font-bold">{currentVessel}</div>
+            </CardContent>
+          </Card>
         </div>
-        <h1>Date: {format(new Date(), "yyyy-MM-dd")}</h1>
       </div>
     </div>
   );

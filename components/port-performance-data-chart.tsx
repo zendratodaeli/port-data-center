@@ -8,21 +8,22 @@ interface ChartData {
   vesselCount: number;
 }
 
-interface PortPerformanceDataProps {
+interface PortPerformanceDataChartProps {
   data: ChartData[];
 }
 
-const PortPerformanceData: React.FC<PortPerformanceDataProps> = ({ data }) => (
+const PortPerformanceDataChart: React.FC<PortPerformanceDataChartProps> = ({ data }) => (
   <div style={{ width: '100%', height: 300 }}>
     <ResponsiveContainer>
       <AreaChart
         data={data}
         margin={{
           top: 10,
-          right: 30,
-          left: 0,
+          right: 0,
+          left: -15,
           bottom: 0,
         }}
+        className='overflow-x-auto'
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name" />
@@ -34,4 +35,4 @@ const PortPerformanceData: React.FC<PortPerformanceDataProps> = ({ data }) => (
   </div>
 );
 
-export default PortPerformanceData;
+export default PortPerformanceDataChart;
