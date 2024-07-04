@@ -1,3 +1,4 @@
+import NavbarLadingPage from '@/components/navbar-landing-page';
 import React from 'react'
 
 const LandingLayout = ({
@@ -7,10 +8,8 @@ const LandingLayout = ({
 }) => {
   
   return (
-    <main className='h-full bg-[#dfdee0] overflow-auto'>
-      <div className='mx-auto max-w-screen-xl h-full w-full'>
-        {children}
-      </div>
+    <main>
+      {children}
     </main>
   )
 }

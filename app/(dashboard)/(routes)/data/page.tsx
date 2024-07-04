@@ -1,11 +1,10 @@
-import { format } from 'date-fns'
+import { format } from 'date-fns';
 import prisma from '@/lib/prismadb';
 import { auth } from '@clerk/nextjs/server';
 import DataClient from './components/client';
 import { DataColumn } from './components/columns';
 
 const DataPage = async () => {
-
   const { userId } = auth();
 
   if (!userId) {
@@ -16,17 +15,34 @@ const DataPage = async () => {
     );
   }
 
-  const data = await prisma.data.findMany({
-    where: {
-      userId: userId
-    },
-    include: {
-      port: true
-    },
-    orderBy: {
-      createdAt: 'desc'
-    }
-  });
+  const listAdminId = "user_2il1XkfhJFtxhMslrBq1JK6PapV";
+
+  let data;
+  
+  if (userId === listAdminId) {
+    // Fetch all data if the user is the list admin
+    data = await prisma.data.findMany({
+      include: {
+        port: true
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+  } else {
+    // Fetch only the data created by the authenticated user
+    data = await prisma.data.findMany({
+      where: {
+        userId: userId
+      },
+      include: {
+        port: true
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+  }
 
   const formattedData: DataColumn[] = data.map((eachData) => ({
     id: eachData.id,
@@ -58,10 +74,10 @@ const DataPage = async () => {
   return (
     <div className='flex-col'>
       <div className='flex-1 space-y-4 p-8 pt-6'>
-        <DataClient data={formattedData}/>
+        <DataClient data={formattedData} />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default DataPage
+export default DataPage;

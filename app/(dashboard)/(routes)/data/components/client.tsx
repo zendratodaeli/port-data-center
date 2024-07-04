@@ -21,7 +21,7 @@ const DataClient: React.FC<DataClientProps> = ({ data }) => {
     <>
       <div className=" flex items-center justify-between">
         <Heading
-          title={`Data (${data.length})`}
+          title={`Data`}
           description="Manage your data"
         />
         <Button

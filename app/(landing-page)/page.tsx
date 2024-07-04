@@ -1,26 +1,12 @@
-import { Button } from "@/components/ui/button";
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import Link from "next/link";
+import LandingPageComponent from '@/components/landing-page-component'
+import React from 'react'
 
-const LandingPage = () => {
+const LandigPage = () => {
   return (
-    <div className="h-full">
-      <div>
-        <div>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
-        </div>
-        <div>
-          <SignedOut>
-            <Button>
-              <Link href={"/sign-in"}>Login</Link>
-            </Button>
-          </SignedOut>
-        </div>
-      </div>
+    <div>
+      <LandingPageComponent/>
     </div>
-  );
-};
+  )
+}
 
-export default LandingPage;
+export default LandigPage

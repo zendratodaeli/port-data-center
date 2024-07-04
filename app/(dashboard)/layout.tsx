@@ -7,8 +7,10 @@ const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
       <div className="h-full hidden">
         <SideBar />
       </div>
-      <NavBar />
-      {children}
+      <NavBar/>
+      <div className="mt-16">
+        {children}
+      </div>
     </div>
   );
 };
