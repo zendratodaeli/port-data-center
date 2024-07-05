@@ -1,5 +1,5 @@
-import { transformDataForChart } from "@/actions/transform-data";
-import PortPerformanceDataChart from "@/components/port-performance-data-chart";
+
+import PortPerformanceDataChartWithToggle from "@/components/port-performance-data-chart-toggle";
 import { Separator } from "@/components/ui/separator";
 import VesselAndPortCard from "@/components/vessel-and-port-card";
 import prisma from "@/lib/prismadb";
@@ -34,8 +34,7 @@ const DashboardPage = async () => {
 
   const totalPorts = await prisma.port.findMany();
   const totalVessels = await prisma.data.findMany();
-  const chartData = transformDataForChart(totalVessels);
-
+  
   const start = startOfToday();
   const end = endOfToday();
 
@@ -49,13 +48,13 @@ const DashboardPage = async () => {
   });
 
   return (
-    <div className=" space-y-4 p-8 pt-6">
+    <div className="space-y-4 p-8 pt-6">
       <VesselAndPortCard
         totalVessel={totalVessels.length}
         totalPort={totalPorts.length}
         currentVessel={vesselsToday.length}
       />
-      <PortPerformanceDataChart data={chartData} />
+      <PortPerformanceDataChartWithToggle totalVessels={totalVessels} />
     </div>
   );
 };

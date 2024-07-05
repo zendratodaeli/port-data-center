@@ -1,10 +1,7 @@
 "use client";
 
 import NavbarLadingPage from "@/components/navbar-landing-page";
-import { Button } from "@/components/ui/button";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { useScroll, useTransform } from "framer-motion";
-import Link from "next/link";
 import { useRef } from "react";
 import { motion } from "framer-motion";
 import TypewriterComponent from "typewriter-effect";
@@ -50,7 +47,7 @@ const LandingPageComponent = () => {
               />
             </div>
             <p className="text-3xl font-serif font-bold underline">
-              {`"to speed up and increase the productivity of the vessel & port"`}
+              {`"to speed up and increase the productivity of the port & vessel"`}
             </p>
           </div>
         </div>

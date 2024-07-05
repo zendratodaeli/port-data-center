@@ -35,22 +35,22 @@ interface ChartData {
   vesselCount: number;
 }
 
-export const transformDataForChart = (data: VesselData[]): ChartData[] => {
-  const weeklyData: { [key: string]: number } = {};
+export const transformDataForChart = (data: VesselData[], period: 'weekly' | 'monthly'): ChartData[] => {
+  const periodData: { [key: string]: number } = {};
 
   data.forEach((vessel) => {
-    const date = format(new Date(vessel.createdAt), 'yyyy-MM-dd');
-    if (weeklyData[date]) {
-      weeklyData[date]++;
+    const date = period === 'weekly' ? format(new Date(vessel.createdAt), 'yyyy-MM-dd') : format(new Date(vessel.createdAt), 'yyyy-MM');
+    if (periodData[date]) {
+      periodData[date]++;
     } else {
-      weeklyData[date] = 1;
+      periodData[date] = 1;
     }
   });
 
-  const sortedDates = Object.keys(weeklyData).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+  const sortedDates = Object.keys(periodData).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
   return sortedDates.map(date => ({
     name: date,
-    vesselCount: weeklyData[date],
+    vesselCount: periodData[date],
   }));
 };

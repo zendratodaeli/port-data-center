@@ -10,7 +10,7 @@ const NavbarLadingPage = () => {
           <div>
             <SignedIn>
               <Button>
-                <Link href={"/sign-in"}>Go to Data</Link>
+                <Link href={"/data"}>Go to Data</Link>
               </Button>
             </SignedIn>
           </div>
