@@ -36,6 +36,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Heading } from "./heading";
+import { useUser } from "@clerk/nextjs";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -59,6 +60,9 @@ export function DataTable<TData, TValue>({
   const [filteredData, setFilteredData] = useState<TData[]>(data); // Track filtered data
 
   const router = useRouter();
+
+  const { user } = useUser();
+  const userId = user?.id;
 
   const rowNumberColumn: ColumnDef<TData, TValue> = {
     id: "rowNumber",
@@ -170,6 +174,20 @@ export function DataTable<TData, TValue>({
     return excelDate;
   };
 
+
+
+  const listAdminId = [
+    "user_2il1XkfhJFtxhMslrBq1JK6PapV",
+    "user_2il3sWCyhA35P1GvOuVsaPEsyrr",
+  ];
+
+  if (!userId) {
+    return null;
+  }
+
+  const isAdmin = listAdminId.includes(userId);
+
+
   if (!isMounted) {
     return null;
   }
@@ -194,8 +212,9 @@ export function DataTable<TData, TValue>({
             type="date"
             value={dateFilter ?? ""}
             onChange={handleDateChange}
-            className="w-[146px]"
+            className="w-[144px]"
           />
+          {!isAdmin && (
           <Dialog>
             <DialogTrigger>
               <Button className="w-[115.84px] md:w-[150px]">
@@ -246,6 +265,8 @@ export function DataTable<TData, TValue>({
               </DialogHeader>
             </DialogContent>
           </Dialog>
+
+          )}
         </div>
         <Input
           placeholder="Search by vessel's name"
