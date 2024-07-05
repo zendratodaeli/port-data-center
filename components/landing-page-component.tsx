@@ -36,27 +36,22 @@ const LandingPageComponent = () => {
         </div>
       </div>
 
-      <div
-        className="h-screen flex flex-col items-center justify-center text-center space-y-3"
-        
-      >
-        <div>
-          <p className="text-6xl md:text-8xl font-mono font-bold">
-            {"Let's"} collect the data from the vessel
-          </p>
-          <div className=" text-4xl font-bold">
-            <TypewriterComponent
-              options={{
-                strings: ["Effortlessly", "Efficiently,", "and Effectively."],
-                autoStart: true,
-                loop: true,
-              }}
-            />
-          </div>
-          <p className="text-3xl font-serif font-bold underline">
-            {`"to speed up and increase the productivity of the port & vessel"`}
-          </p>
+      <div className="h-screen flex flex-col items-center justify-center text-center gap-y-4 space-y-5">
+        <p className="text-6xl md:text-8xl font-mono font-bold">
+          {"Let's"} collect the data from the vessel
+        </p>
+        <div className=" text-4xl font-bold">
+          <TypewriterComponent
+            options={{
+              strings: ["Effortlessly", "Efficiently,", "and Effectively."],
+              autoStart: true,
+              loop: true,
+            }}
+          />
         </div>
+        <p className="text-3xl font-serif font-bold underline">
+          {`"to speed up and increase the productivity of the port & vessel"`}
+        </p>
       </div>
 
       <motion.div
