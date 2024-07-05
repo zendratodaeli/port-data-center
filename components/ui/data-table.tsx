@@ -194,7 +194,7 @@ export function DataTable<TData, TValue>({
             type="date"
             value={dateFilter ?? ""}
             onChange={handleDateChange}
-            className="w-[144px]"
+            className="w-[146px]"
           />
           <Dialog>
             <DialogTrigger>

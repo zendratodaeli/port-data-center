@@ -40,7 +40,7 @@ const SideBar = () => {
     routes.unshift({
       href: `/dashboard`,
       label: "Dashboard",
-      icon: Database,
+      icon: LayoutDashboard,
       color: "text-black",
     });
   }
