@@ -18,22 +18,22 @@ const LandingPageComponent = () => {
   const opacityProgress = useTransform(scrollYProgress, [0, 1], [0.6, 1]);
 
   return (
-    <div className="">
-      <div className="flex flex-col md:flex-row justify-between">
-        <div className="w-[350px] h-screen bg-blue-700 rounded-br-3xl relative">
-          <div className="absolute inset-0 grid-pattern"></div>
-        </div>
-        <div className="flex flex-col items-center justify-center w-[350px] bg-slate-900 absolute z-50 bottom-32 top-32 shadow-2xl left-20 border-spacing-2 rounded-tl-3xl rounded-br-3xl">
-          <div>
-            <p className=" text-5xl text-white text-center">Port Data Center</p>
-            <NavbarLadingPage />
-          </div>
-        </div>
-        <div className="hidden md:block w-full h-[20rem]">
-          <div className="hidden md:bg-[url('/background.jpg')] bg-cover h-[20rem] pl-48 md:flex items-center shadow-2xl rounded-br-3xl">
+    <div>
+      <div className="h-screen flex flex-col md:flex-row justify-between">
+        <div className="w-full h-[20rem]">
+          <div className="bg-[url('/background.jpg')] bg-cover h-[20rem] pl-48 md:flex items-center shadow-2xl">
             <div className="absolute inset-0 grid-pattern"></div>
           </div>
-          <div className="bg-gray-50 h-[13rem] md:pl-48 mt-14 mb-14 space-y-3">
+          <div className=" h-[200px] bg-blue-700 w-[300px] md:w-[500px] mx-auto mt-[-80px] rounded-3xl">
+            <NavbarLadingPage />
+            <div className=" text-center text-xl font-serif text-white mt-2">
+              Welcome to
+            </div>
+            <div className=" text-center text-4xl font-serif text-white mt-2">
+              Port Data Center
+            </div>
+          </div>
+          <div className="bg-gray-50 md:h-[13rem] pl-4 mt-10 mb-14 space-y-3 text-center">
             <p className="text-7xl font-serif font-bold">
               {"Let's"} collect the data from the vessel
             </p>
@@ -51,48 +51,18 @@ const LandingPageComponent = () => {
             </p>
           </div>
         </div>
-
-        <motion.div 
-          ref={ref}
-          className=" h-1/2 md:hidden"
-          style={{
-            scale: scaleProgress,
-            opacity: scrollYProgress,
-          }}
-        >
-          <div className="hidden md:bg-[url('/background.jpg')] bg-cover h-[20rem] pl-48 md:flex items-center shadow-2xl rounded-br-3xl">
-            <div className="absolute inset-0 grid-pattern"></div>
-          </div>
-          <div className="bg-gray-50 h-[13rem] md:pl-48 mt-14 mb-14 space-y-3">
-            <p className="text-7xl font-serif font-bold">
-              {"Let's"} collect the data from the vessel
-            </p>
-            <div className=" text-4xl font-serif">
-              <TypewriterComponent
-                options={{
-                  strings: ["Effortlessly", "Efficiently,", "and Effectively."],
-                  autoStart: true,
-                  loop: true,
-                }}
-              />
-            </div>
-            <p className="text-3xl font-serif font-bold underline">
-              {`"to speed up and increase the productivity of the vessel & port"`}
-            </p>
-          </div>
-        </motion.div>
       </div>
 
       <motion.div
         ref={ref}
-        className=" md:h-screen mt-56 lg:mt-0"
+        className=" mt-[100px]"
         style={{
           scale: scaleProgress,
           opacity: scrollYProgress,
         }}
       >
-        <main className="flex-grow container mx-auto mt-8 md:mt-0 p-6">
-          <section className="text-center mt-14 mb-10 space-y-2">
+        <main className="flex-grow container mx-auto mt-5 p-6">
+          <section className="text-center mb-10 space-y-2">
             <h1 className="text-3xl md:text-5xl font-bold">
               Uploading & Updating
             </h1>
@@ -117,7 +87,6 @@ const LandingPageComponent = () => {
               className="w-full"
               alt="background"
             />
-            {/* <h1 className="text-center">We are currently working on it.</h1> */}
           </section>
         </main>
       </motion.div>
