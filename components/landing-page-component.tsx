@@ -6,6 +6,7 @@ import { useRef } from "react";
 import { motion } from "framer-motion";
 import TypewriterComponent from "typewriter-effect";
 import Image from "next/image";
+import LandingPageExternalComponent from "./landing-page-external-component";
 
 const LandingPageComponent = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -20,39 +21,23 @@ const LandingPageComponent = () => {
   return (
     <div>
       <div className="h-screen flex flex-col md:flex-row justify-between">
-        <div className=" w-full h-[20rem]">
-          <div className="bg-[url('/background.jpg')] bg-cover h-[30rem] pl-48 md:flex items-center shadow-2xl">
-            <div className="absolute inset-0 grid-pattern"></div>
+        <div className="w-full h-[20rem] relative">
+          <div className="bg-[url('/background.jpg')] bg-cover h-[30rem] pl-48 md:flex items-center shadow-2xl relative z-10">
+            <div className="absolute inset-0 grid-pattern z-0"></div>
           </div>
-          <div className=" h-[200px] bg-blue-700 w-[300px] md:w-[500px] mx-auto mt-[-80px] rounded-3xl">
+          <div className="h-[200px] bg-blue-700 w-[300px] md:w-[500px] mx-auto mt-[-80px] rounded-3xl relative z-20">
             <NavbarLadingPage />
-            <div className=" text-center text-xl font-serif text-white mt-2">
+            <div className="text-center text-xl font-serif text-white mt-2">
               Welcome to
             </div>
-            <div className=" text-center text-4xl font-serif text-white mt-2">
+            <div className="text-center text-4xl font-serif text-white mt-2">
               Port Data Center
             </div>
           </div>
         </div>
       </div>
-
-      <div className="h-screen flex flex-col items-center justify-center text-center gap-y-4 space-y-5">
-        <p className="text-6xl md:text-8xl font-mono font-bold">
-          {"Let's"} collect the data from the vessel
-        </p>
-        <div className=" text-4xl font-bold">
-          <TypewriterComponent
-            options={{
-              strings: ["Effortlessly", "Efficiently,", "and Effectively."],
-              autoStart: true,
-              loop: true,
-            }}
-          />
-        </div>
-        <p className="text-3xl font-serif font-bold underline">
-          {`"to speed up and increase the productivity of the port & vessel"`}
-        </p>
-      </div>
+      
+      <LandingPageExternalComponent />
 
       <motion.div
         ref={ref}
