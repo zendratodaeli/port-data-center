@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { transformDataForChart } from "@/actions/transform-data";
 import PortPerformanceDataChart from "@/components/port-performance-data-chart";
-import { Button } from './ui/button';
 
 interface VesselData {
   id: string;
@@ -46,23 +45,28 @@ interface PortPerformanceDataChartWithToggleProps {
 
 const PortPerformanceDataChartWithToggle: React.FC<PortPerformanceDataChartWithToggleProps> = ({ totalVessels }) => {
   const [chartData, setChartData] = useState<ChartData[]>([]);
-  const [dataPeriod, setDataPeriod] = useState<'weekly' | 'monthly'>('weekly');
+  const [dataPeriod, setDataPeriod] = useState<'weekly' | 'monthly' | 'yearly'>('weekly');
 
   useEffect(() => {
     const transformedData = transformDataForChart(totalVessels, dataPeriod);
     setChartData(transformedData);
   }, [dataPeriod, totalVessels]);
 
-  const handleToggle = () => {
-    const newPeriod = dataPeriod === 'weekly' ? 'monthly' : 'weekly';
-    setDataPeriod(newPeriod);
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setDataPeriod(event.target.value as 'weekly' | 'monthly' | 'yearly');
   };
 
   return (
     <div style={{ width: '100%', height: 300 }}>
-      <Button onClick={handleToggle} className="mb-4 p-2 bg-blue-500 text-black rounded">
-        Toggle to {dataPeriod === 'weekly' ? 'Monthly' : 'Weekly'} Data
-      </Button>
+      <select 
+        onChange={handleSelectChange} 
+        value={dataPeriod} 
+        className="mb-4 p-2 bg-inherit text-black rounded border"
+      >
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+        <option value="yearly">Yearly</option>
+      </select>
       <PortPerformanceDataChart data={chartData} />
     </div>
   );

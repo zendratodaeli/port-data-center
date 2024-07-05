@@ -35,11 +35,19 @@ interface ChartData {
   vesselCount: number;
 }
 
-export const transformDataForChart = (data: VesselData[], period: 'weekly' | 'monthly'): ChartData[] => {
+export const transformDataForChart = (data: VesselData[], period: 'weekly' | 'monthly' | 'yearly'): ChartData[] => {
   const periodData: { [key: string]: number } = {};
 
   data.forEach((vessel) => {
-    const date = period === 'weekly' ? format(new Date(vessel.createdAt), 'yyyy-MM-dd') : format(new Date(vessel.createdAt), 'yyyy-MM');
+    let date: string;
+    if (period === 'weekly') {
+      date = format(new Date(vessel.createdAt), 'yyyy-MM-dd');
+    } else if (period === 'monthly') {
+      date = format(new Date(vessel.createdAt), 'yyyy-MM');
+    } else {
+      date = format(new Date(vessel.createdAt), 'yyyy');
+    }
+    
     if (periodData[date]) {
       periodData[date]++;
     } else {
