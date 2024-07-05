@@ -85,7 +85,7 @@ const LandingPageComponent = () => {
 
       <motion.div
         ref={ref}
-        className=" md:h-screen mt-40 lg:mt-0"
+        className=" md:h-screen mt-56 lg:mt-0"
         style={{
           scale: scaleProgress,
           opacity: scrollYProgress,
