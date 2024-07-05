@@ -15,7 +15,7 @@ const LandingPageComponent = () => {
     offset: ["0 1", "1.33 1"],
   });
 
-  const scaleProgress = useTransform(scrollYProgress, [0, 1], [0.5, 1]);
+  const scaleProgress = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
   const opacityProgress = useTransform(scrollYProgress, [0, 1], [0.6, 1]);
 
   return (
@@ -47,20 +47,24 @@ const LandingPageComponent = () => {
           opacity: scrollYProgress,
         }}
       >
-        <main className="flex-grow container mx-auto mt-5 p-6">
+        <main className="flex-grow mx-auto mt-5 p-6 w-full font-mono">
           <section className="text-center mb-10 space-y-2">
-            <h1 className="text-3xl md:text-5xl font-bold">
-              Uploading & Updating
+            <h1 className="text-black text-4xl md:text-8xl font-bold">
+              Uploading 
+              <br />
+              <span>&</span>
+              <br />
+              Updating
             </h1>
-            <h1 className="text-3xl md:text-5xl font-bold">
+            <h1 className="text-black text-3xl md:text-5xl font-bold">
               Your {"Vessel's"} data through Port Data Center
             </h1>
-            <p className="text-gray-500 my-6 text-sm md:text-base">
+            <p className="text-black my-6 text-sm md:text-base">
               {"Here's"} how you can successfully accomplish this with precision
               and confidence. Watch the video below for detailed guidance.
             </p>
           </section>
-          <section className="bg-white shadow-md rounded-lg p-4 md:p-6">
+          <section className="flex justify-center">
             {/* <video
             src="/home-video.mp4"
               controls
@@ -70,7 +74,7 @@ const LandingPageComponent = () => {
               src={"/background.jpg"}
               width={400}
               height={400}
-              className="w-full"
+              className="w-full rounded-lg"
               alt="background"
             />
           </section>
