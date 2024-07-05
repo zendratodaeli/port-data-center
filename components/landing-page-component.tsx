@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useRef } from "react";
 import { motion } from "framer-motion";
 import TypewriterComponent from "typewriter-effect";
+import Image from "next/image";
 
 const LandingPageComponent = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -20,8 +21,8 @@ const LandingPageComponent = () => {
   const opacityProgress = useTransform(scrollYProgress, [0, 1], [0.6, 1]);
 
   return (
-    <div>
-      <div className="flex justify-between">
+    <div className="">
+      <div className="flex flex-col md:flex-row justify-between">
         <div className="w-[350px] h-screen bg-blue-700 rounded-br-3xl relative">
           <div className="absolute inset-0 grid-pattern"></div>
         </div>
@@ -31,11 +32,11 @@ const LandingPageComponent = () => {
             <NavbarLadingPage />
           </div>
         </div>
-        <div className="w-full h-[20rem]">
-          <div className="bg-[url('/background.jpg')] bg-cover h-[20rem] pl-48 flex items-center shadow-2xl rounded-br-3xl">
+        <div className="hidden md:block w-full h-[20rem]">
+          <div className="hidden md:bg-[url('/background.jpg')] bg-cover h-[20rem] pl-48 md:flex items-center shadow-2xl rounded-br-3xl">
             <div className="absolute inset-0 grid-pattern"></div>
           </div>
-          <div className="bg-gray-50 h-[13rem] pl-48 mt-20 space-y-3">
+          <div className="bg-gray-50 h-[13rem] md:pl-48 mt-14 mb-14 space-y-3">
             <p className="text-7xl font-serif font-bold">
               {"Let's"} collect the data from the vessel
             </p>
@@ -48,20 +49,53 @@ const LandingPageComponent = () => {
                 }}
               />
             </div>
+            <p className="text-3xl font-serif font-bold underline">
+              {`"to speed up and increase the productivity of the vessel & port"`}
+            </p>
           </div>
         </div>
+
+        <motion.div 
+          ref={ref}
+          className=" h-1/2 md:hidden"
+          style={{
+            scale: scaleProgress,
+            opacity: scrollYProgress,
+          }}
+        >
+          <div className="hidden md:bg-[url('/background.jpg')] bg-cover h-[20rem] pl-48 md:flex items-center shadow-2xl rounded-br-3xl">
+            <div className="absolute inset-0 grid-pattern"></div>
+          </div>
+          <div className="bg-gray-50 h-[13rem] md:pl-48 mt-14 mb-14 space-y-3">
+            <p className="text-7xl font-serif font-bold">
+              {"Let's"} collect the data from the vessel
+            </p>
+            <div className=" text-4xl font-serif">
+              <TypewriterComponent
+                options={{
+                  strings: ["Effortlessly", "Efficiently,", "and Effectively."],
+                  autoStart: true,
+                  loop: true,
+                }}
+              />
+            </div>
+            <p className="text-3xl font-serif font-bold underline">
+              {`"to speed up and increase the productivity of the vessel & port"`}
+            </p>
+          </div>
+        </motion.div>
       </div>
 
       <motion.div
         ref={ref}
-        className=" h-screen"
+        className=" md:h-screen mt-40 lg:mt-0"
         style={{
           scale: scaleProgress,
           opacity: scrollYProgress,
         }}
       >
-        <main className="flex-grow container mx-auto p-6">
-          <section className="text-center mt-16 mb-10 space-y-2">
+        <main className="flex-grow container mx-auto mt-8 md:mt-0 p-6">
+          <section className="text-center mt-14 mb-10 space-y-2">
             <h1 className="text-3xl md:text-5xl font-bold">
               Uploading & Updating
             </h1>
@@ -79,27 +113,17 @@ const LandingPageComponent = () => {
               controls
             className="w-full h-auto rounded-lg"
           /> */}
-            <h1 className="text-center">We are currently working on it.</h1>
+            <Image
+              src={"/background.jpg"}
+              width={400}
+              height={400}
+              className="w-full"
+              alt="background"
+            />
+            {/* <h1 className="text-center">We are currently working on it.</h1> */}
           </section>
         </main>
       </motion.div>
-
-      <div className=" flex justify-center mb-10">
-        <div>
-          <SignedOut>
-            <Button>
-              <Link href={"/dashboard"}>Get started</Link>
-            </Button>
-          </SignedOut>
-        </div>
-        <div>
-          <SignedIn>
-            <Button>
-              <Link href={"/sign-in"}>Go to Data</Link>
-            </Button>
-          </SignedIn>
-        </div>
-      </div>
     </div>
   );
 };
