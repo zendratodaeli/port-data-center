@@ -44,7 +44,7 @@ const DataClient: React.FC<DataClientProps> = ({ data }) => {
         )}
       </div>
       <Separator />
-      <DataTable searchKey="vesselName" dateKey="createdAt" columns={columns} data={data} />
+      <DataTable vesselKey="vesselName" dateKey="createdAt" portKey="port" columns={columns} data={data} />
     </>
   );
 };

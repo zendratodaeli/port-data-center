@@ -41,15 +41,17 @@ import { useUser } from "@clerk/nextjs";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  searchKey: string;
+  vesselKey: string;
   dateKey: string;
+  portKey: string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  searchKey,
+  vesselKey,
   dateKey,
+  portKey,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [dateFilter, setDateFilter] = useState<string | undefined>(
@@ -92,7 +94,9 @@ export function DataTable<TData, TValue>({
   }, []);
 
   useEffect(() => {
-    setFilteredData(table.getFilteredRowModel().rows.map((row) => row.original));
+    setFilteredData(
+      table.getFilteredRowModel().rows.map((row) => row.original)
+    );
   }, [columnFilters, table]);
 
   const createMarkup = (htmlContent: string) => {
@@ -174,8 +178,6 @@ export function DataTable<TData, TValue>({
     return excelDate;
   };
 
-
-
   const listAdminId = [
     "user_2il1XkfhJFtxhMslrBq1JK6PapV",
     "user_2il3sWCyhA35P1GvOuVsaPEsyrr",
@@ -187,7 +189,6 @@ export function DataTable<TData, TValue>({
 
   const isAdmin = listAdminId.includes(userId);
 
-
   if (!isMounted) {
     return null;
   }
@@ -195,17 +196,21 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       <div>
-        <h2 className=" text-xl md:text-3xl font-bold tracking-tight">Total {`(${filteredData.length})`}</h2>
-        <p className=" text-sm text-muted-foreground">{"Current vessels at the port"}</p>
+        <h2 className=" text-xl md:text-3xl font-bold tracking-tight">
+          Total {`(${filteredData.length})`}
+        </h2>
+        <p className=" text-sm text-muted-foreground">
+          {"Current vessels at the port"}
+        </p>
       </div>
       <div className="grid grid-cols-1 w-full md:grid-cols-2 py-4 gap-2">
         <Input
-          placeholder="Search by vessel's name"
-          value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
+          placeholder="Search by vessel"
+          value={(table.getColumn(vesselKey)?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn(searchKey)?.setFilterValue(event.target.value)
+            table.getColumn(vesselKey)?.setFilterValue(event.target.value)
           }
-          className="hidden md:flex w-full md:w-[350px]"
+          className="hidden md:flex md:w-[350px]"
         />
         <div className="flex gap-2 justify-between">
           <Input
@@ -214,65 +219,79 @@ export function DataTable<TData, TValue>({
             onChange={handleDateChange}
             className="w-[144px]"
           />
-          {!isAdmin && (
-          <Dialog>
-            <DialogTrigger>
-              <Button className="w-[115.84px] md:w-[150px]">
-                <Plus className=" mr-2 h-4 w-4" />
-                Import
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle className="text-center">
-                  Importing Data
-                </DialogTitle>
-                <DialogDescription>
-                  <div className="flex items-center justify-center w-full mt-4">
-                    <label
-                      htmlFor="dropzone-file"
-                      className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
-                    >
-                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                        
-                        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                          <span className="font-semibold">Click to upload</span>{" "}
-                          or drag and drop
-                        </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                          XLS or XLSX files only
-                        </p>
-                      </div>
-                      <Input
-                        id="dropzone-file"
-                        type="file"
-                        accept=".xls,.xlsx"
-                        className="hidden"
-                        onChange={(e) =>
-                          setFile(e.target.files ? e.target.files[0] : null)
-                        }
-                      />
-                    </label>
-                  </div>
-                  <Button
-                    onClick={handleFileUpload}
-                    disabled={loading}
-                    className="w-full mt-4"
-                  >
-                    {loading ? "Uploading on progress..." : " Upload"}
+          {!isAdmin 
+          ? 
+            (
+              <Dialog>
+                <DialogTrigger>
+                  <Button className="w-[115.84px] md:w-[150px]">
+                    <Plus className=" mr-2 h-4 w-4" />
+                    Import
                   </Button>
-                </DialogDescription>
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
-
-          )}
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle className="text-center">
+                      Importing Data
+                    </DialogTitle>
+                    <DialogDescription>
+                      <div className="flex items-center justify-center w-full mt-4">
+                        <label
+                          htmlFor="dropzone-file"
+                          className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                        >
+                          <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                            <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                              <span className="font-semibold">
+                                Click to upload
+                              </span>{" "}
+                              or drag and drop
+                            </p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                              XLS or XLSX files only
+                            </p>
+                          </div>
+                          <Input
+                            id="dropzone-file"
+                            type="file"
+                            accept=".xls,.xlsx"
+                            className="hidden"
+                            onChange={(e) =>
+                              setFile(e.target.files ? e.target.files[0] : null)
+                            }
+                          />
+                        </label>
+                      </div>
+                      <Button
+                        onClick={handleFileUpload}
+                        disabled={loading}
+                        className="w-full mt-4"
+                      >
+                        {loading ? "Uploading on progress..." : " Upload"}
+                      </Button>
+                    </DialogDescription>
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog>
+            )
+          :
+          (
+            <Input
+            placeholder="Search by port"
+            value={(table.getColumn(portKey)?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn(portKey)?.setFilterValue(event.target.value)
+            }
+            className="w-full md:w-[350px]"
+          />
+          )
+        }
         </div>
         <Input
-          placeholder="Search by vessel's name"
-          value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
+          placeholder="Search by vessel"
+          value={(table.getColumn(vesselKey)?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn(searchKey)?.setFilterValue(event.target.value)
+            table.getColumn(vesselKey)?.setFilterValue(event.target.value)
           }
           className="flex w-full md:hidden"
         />
@@ -356,4 +375,3 @@ export function DataTable<TData, TValue>({
     </div>
   );
 }
-

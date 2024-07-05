@@ -1,10 +1,10 @@
 
 import PortPerformanceDataChartWithToggle from "@/components/port-performance-data-chart-toggle";
-import { Separator } from "@/components/ui/separator";
 import VesselAndPortCard from "@/components/vessel-and-port-card";
 import prisma from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs/server";
 import { endOfToday, startOfToday } from "date-fns";
+import { redirect } from "next/navigation";
 
 const DashboardPage = async () => {
   const { userId } = auth();
@@ -19,17 +19,7 @@ const DashboardPage = async () => {
   );
 
   if (!userId || !isAdmin) {
-    return (
-      <div className="space-y-4 p-8 pt-6">
-        <p className="text-xl md:text-2xl lg:text-4xl text-center font-semibold">
-          Access Denied
-        </p>
-        <Separator />
-        <p className="text-center">
-          You do not have permission to view this page.
-        </p>
-      </div>
-    );
+    redirect("/data")
   }
 
   const totalPorts = await prisma.port.findMany();

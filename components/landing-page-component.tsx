@@ -30,7 +30,7 @@ const LandingPageComponent = () => {
             <div className="text-center text-xl font-serif text-white mt-2">
               Welcome to
             </div>
-            <div className="text-center text-4xl font-serif text-white mt-2">
+            <div className="text-center text-6xl font-serif text-white mt-2">
               Port Data Center
             </div>
           </div>

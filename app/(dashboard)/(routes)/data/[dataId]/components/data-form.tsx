@@ -19,7 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { useParams, useRouter } from "next/navigation";
+import { redirect, useParams, useRouter } from "next/navigation";
 import { AlertModal } from "@/components/modal/alert-modal";
 import { useUser } from "@clerk/nextjs";
 import { Data, Port } from "@prisma/client";
@@ -163,459 +163,476 @@ const DataForm: React.FC<DataFormProps> = ({ initialData, ports }) => {
     }
   };
 
-  return (
-    <>
-      <AlertModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        onConfirm={onDelete}
-        loading={loading}
-      />
-      <div className="flex items-center justify-between">
-        <Heading title={title} description={description} />
-        {initialData && (
-          <Button
-            disabled={loading}
-            variant={"destructive"}
-            size="sm"
-            onClick={() => setOpen(true)}
+  const listAdminId = [
+    "user_2il1XkfhJFtxhMslrBq1JK6PapV",
+    "user_2il3sWCyhA35P1GvOuVsaPEsyrr",
+  ];
+
+  if (!userId) {
+    return null;
+  }
+
+  const isAdmin = listAdminId.includes(userId);
+
+  if(!isAdmin) {
+    return (
+      <>
+        <AlertModal
+          isOpen={open}
+          onClose={() => setOpen(false)}
+          onConfirm={onDelete}
+          loading={loading}
+        />
+        <div className="flex items-center justify-between">
+          <Heading title={title} description={description} />
+          {initialData && (
+            <Button
+              disabled={loading}
+              variant={"destructive"}
+              size="sm"
+              onClick={() => setOpen(true)}
+            >
+              <Trash className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+        <Separator />
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8 w-full"
           >
-            <Trash className="h-4 w-4" />
-          </Button>
-        )}
-      </div>
-      <Separator />
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 w-full"
-        >
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <FormField
-              control={form.control}
-              name="portId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Ports</FormLabel>
-                  <Select
-                    disabled={loading}
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    defaultValue={field.value}
-                  >
-                    <FormControl className=" w-full sm:w-full">
-                      <SelectTrigger>
-                        <SelectValue
-                          defaultValue={field.value}
-                          placeholder="Select a port"
-                        />
-                      </SelectTrigger>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <FormField
+                control={form.control}
+                name="portId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Ports</FormLabel>
+                    <Select
+                      disabled={loading}
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      defaultValue={field.value}
+                    >
+                      <FormControl className=" w-full sm:w-full">
+                        <SelectTrigger>
+                          <SelectValue
+                            defaultValue={field.value}
+                            placeholder="Select a port"
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {ports.map((port) => (
+                          <SelectItem key={port.id} value={port.id}>
+                            {port.portName}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="shipper"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Shipper</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={loading}
+                        placeholder="Shipper..."
+                        {...field}
+                        className="w-full sm:w-full"
+                      />
                     </FormControl>
-                    <SelectContent>
-                      {ports.map((port) => (
-                        <SelectItem key={port.id} value={port.id}>
-                          {port.portName}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="shipper"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Shipper</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Shipper..."
-                      {...field}
-                      className="w-full sm:w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="consignee"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Consignee</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Consignee..."
-                      {...field}
-                      className="w-full sm:w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="shipowner"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Shipowner</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Shipowner..."
-                      {...field}
-                      className="w-full sm:w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="vesselName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Vessel Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Vessel Name..."
-                      {...field}
-                      className="w-full sm:w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="vesselType"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Vessel Type</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Vessel Type..."
-                      {...field}
-                      className="w-full sm:w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="built"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Built</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="date"
-                      disabled={loading}
-                      {...field}
-                      className="w-full sm:w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="imoNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>IMO Number</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      disabled={loading}
-                      placeholder="IMO Number..."
-                      {...field}
-                      className="w-full sm:w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="imoClasses"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>IMO Classes</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="IMO Classes..."
-                      {...field}
-                      className="w-full sm:w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="flag"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Flag</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Flag..."
-                      {...field}
-                      className="w-full sm:w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="cargoQty"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Cargo Quantity (MT)</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      disabled={loading}
-                      placeholder="Cargo Quantity..."
-                      {...field}
-                      className="w-full sm:w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="cargoType"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Cargo Type</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Cargo Type..."
-                      {...field}
-                      className="w-full sm:w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="nor"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>NOR</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="datetime-local"
-                      disabled={loading}
-                      {...field}
-                      className="w-full sm:w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="gt"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>GT</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      disabled={loading}
-                      placeholder="GT..."
-                      {...field}
-                      className="w-full sm:w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="nt"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>NT</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      disabled={loading}
-                      placeholder="NT..."
-                      {...field}
-                      className="w-full sm:w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="dwt"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>DWT (MT)</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      disabled={loading}
-                      placeholder="DWT..."
-                      {...field}
-                      className="w-full sm:w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="loa"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>LOA (M)</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      disabled={loading}
-                      placeholder="LOA..."
-                      {...field}
-                      className="w-full sm:w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="beam"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Beam (M)</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      disabled={loading}
-                      placeholder="Beam..."
-                      {...field}
-                      className="w-full sm:w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="classification"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Classification</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Classification..."
-                      {...field}
-                      className="w-full sm:w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="activity"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Activity (Loading / Unloading)</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Loading or Unloading..."
-                      {...field}
-                      className="w-full sm:w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="master"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Master</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Name of Master..."
-                      {...field}
-                      className="w-full sm:w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="nationality"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nationality</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Nationality of the Master..."
-                      {...field}
-                      className="w-full sm:w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <Button disabled={loading} className="ml-auto" type="submit">
-            {action}
-          </Button>
-        </form>
-      </Form>
-    </>
-  );
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="consignee"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Consignee</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={loading}
+                        placeholder="Consignee..."
+                        {...field}
+                        className="w-full sm:w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="shipowner"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Shipowner</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={loading}
+                        placeholder="Shipowner..."
+                        {...field}
+                        className="w-full sm:w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="vesselName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Vessel Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={loading}
+                        placeholder="Vessel Name..."
+                        {...field}
+                        className="w-full sm:w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="vesselType"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Vessel Type</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={loading}
+                        placeholder="Vessel Type..."
+                        {...field}
+                        className="w-full sm:w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="built"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Built</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="date"
+                        disabled={loading}
+                        {...field}
+                        className="w-full sm:w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="imoNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>IMO Number</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        disabled={loading}
+                        placeholder="IMO Number..."
+                        {...field}
+                        className="w-full sm:w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="imoClasses"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>IMO Classes</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={loading}
+                        placeholder="IMO Classes..."
+                        {...field}
+                        className="w-full sm:w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="flag"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Flag</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={loading}
+                        placeholder="Flag..."
+                        {...field}
+                        className="w-full sm:w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="cargoQty"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Cargo Quantity (MT)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        disabled={loading}
+                        placeholder="Cargo Quantity..."
+                        {...field}
+                        className="w-full sm:w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="cargoType"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Cargo Type</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={loading}
+                        placeholder="Cargo Type..."
+                        {...field}
+                        className="w-full sm:w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="nor"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>NOR</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="datetime-local"
+                        disabled={loading}
+                        {...field}
+                        className="w-full sm:w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="gt"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>GT</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        disabled={loading}
+                        placeholder="GT..."
+                        {...field}
+                        className="w-full sm:w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="nt"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>NT</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        disabled={loading}
+                        placeholder="NT..."
+                        {...field}
+                        className="w-full sm:w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="dwt"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>DWT (MT)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        disabled={loading}
+                        placeholder="DWT..."
+                        {...field}
+                        className="w-full sm:w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="loa"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>LOA (M)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        disabled={loading}
+                        placeholder="LOA..."
+                        {...field}
+                        className="w-full sm:w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="beam"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Beam (M)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        disabled={loading}
+                        placeholder="Beam..."
+                        {...field}
+                        className="w-full sm:w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="classification"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Classification</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={loading}
+                        placeholder="Classification..."
+                        {...field}
+                        className="w-full sm:w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="activity"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Activity (Loading / Unloading)</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={loading}
+                        placeholder="Loading or Unloading..."
+                        {...field}
+                        className="w-full sm:w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="master"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Master</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={loading}
+                        placeholder="Name of Master..."
+                        {...field}
+                        className="w-full sm:w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="nationality"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nationality</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={loading}
+                        placeholder="Nationality of the Master..."
+                        {...field}
+                        className="w-full sm:w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <Button disabled={loading} className="ml-auto" type="submit">
+              {action}
+            </Button>
+          </form>
+        </Form>
+      </>
+    );
+
+  } else {
+    redirect("/data");
+  }
+
 };
 
 export default DataForm;

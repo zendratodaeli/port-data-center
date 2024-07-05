@@ -27,7 +27,6 @@ const DataPage = async () => {
   let data;
 
   if (userId && isAdmin) {
-    // Fetch all data if the user is the list admin
     data = await prisma.data.findMany({
       include: {
         port: true,
@@ -37,7 +36,6 @@ const DataPage = async () => {
       },
     });
   } else {
-    // Fetch only the data created by the authenticated user
     data = await prisma.data.findMany({
       where: {
         userId: userId,
