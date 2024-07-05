@@ -35,7 +35,7 @@ interface ChartData {
   vesselCount: number;
 }
 
-export const transformDataForChart = (data: VesselData[], period: 'weekly' | 'monthly' | 'yearly'): ChartData[] => {
+export const transformDataForChart = (data: VesselData[], period: 'weekly' | 'monthly' | 'yearly' | 'all'): ChartData[] => {
   const periodData: { [key: string]: number } = {};
 
   data.forEach((vessel) => {
@@ -44,8 +44,11 @@ export const transformDataForChart = (data: VesselData[], period: 'weekly' | 'mo
       date = format(new Date(vessel.createdAt), 'yyyy-MM-dd');
     } else if (period === 'monthly') {
       date = format(new Date(vessel.createdAt), 'yyyy-MM');
-    } else {
+    } else if (period === 'yearly') {
       date = format(new Date(vessel.createdAt), 'yyyy');
+    } else {
+      // Group by year-month for the 'all' period to keep the chart manageable
+      date = format(new Date(vessel.createdAt), 'yyyy-MM');
     }
     
     if (periodData[date]) {
@@ -62,3 +65,4 @@ export const transformDataForChart = (data: VesselData[], period: 'weekly' | 'mo
     vesselCount: periodData[date],
   }));
 };
+

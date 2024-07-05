@@ -45,7 +45,7 @@ interface PortPerformanceDataChartWithToggleProps {
 
 const PortPerformanceDataChartWithToggle: React.FC<PortPerformanceDataChartWithToggleProps> = ({ totalVessels }) => {
   const [chartData, setChartData] = useState<ChartData[]>([]);
-  const [dataPeriod, setDataPeriod] = useState<'weekly' | 'monthly' | 'yearly'>('weekly');
+  const [dataPeriod, setDataPeriod] = useState<'weekly' | 'monthly' | 'yearly' | 'all'>('weekly');
 
   useEffect(() => {
     const transformedData = transformDataForChart(totalVessels, dataPeriod);
@@ -53,7 +53,7 @@ const PortPerformanceDataChartWithToggle: React.FC<PortPerformanceDataChartWithT
   }, [dataPeriod, totalVessels]);
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setDataPeriod(event.target.value as 'weekly' | 'monthly' | 'yearly');
+    setDataPeriod(event.target.value as 'weekly' | 'monthly' | 'yearly' | 'all');
   };
 
   return (
@@ -61,11 +61,12 @@ const PortPerformanceDataChartWithToggle: React.FC<PortPerformanceDataChartWithT
       <select 
         onChange={handleSelectChange} 
         value={dataPeriod} 
-        className="mb-4 p-2 bg-inherit text-black rounded border"
+        className="mb-4 p-2 text-black rounded border"
       >
         <option value="weekly">Weekly</option>
         <option value="monthly">Monthly</option>
         <option value="yearly">Yearly</option>
+        <option value="all">All</option>
       </select>
       <PortPerformanceDataChart data={chartData} />
     </div>
