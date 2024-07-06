@@ -55,3 +55,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Password {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  password  String
+}

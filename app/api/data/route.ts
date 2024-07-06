@@ -41,8 +41,8 @@ export async function POST(req: Request) {
     }
 
     const currentDate = new Date();
-    currentDate.setHours(0, 0, 0, 0);  // Set time to 00:00:00.000
-
+    currentDate.setHours(0, 0, 0, 0);
+    
     const data = await prismadb.data.create({
       data: {
         userId,
