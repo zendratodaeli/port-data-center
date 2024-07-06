@@ -66,6 +66,7 @@ export function DataTable<TData extends DataItem, TValue>({
   const [filteredData, setFilteredData] = useState<TData[]>(data);
   const [selectedPort, setSelectedPort] = useState<string | null>(null);
   const [availablePorts, setAvailablePorts] = useState<string[]>([]);
+  const [isDragOver, setIsDragOver] = useState(false);
 
   const router = useRouter();
 
@@ -134,8 +135,8 @@ export function DataTable<TData extends DataItem, TValue>({
     }
   };
 
-  const handleFileUpload = async () => {
-    if (file) {
+  const handleFileUpload = async (uploadedFile: File | null) => {
+    if (uploadedFile) {
       setLoading(true);
       const reader = new FileReader();
       reader.onload = async (e) => {
@@ -170,7 +171,7 @@ export function DataTable<TData extends DataItem, TValue>({
           }
         }
       };
-      reader.readAsBinaryString(file);
+      reader.readAsBinaryString(uploadedFile);
     }
   };
 
@@ -219,6 +220,27 @@ export function DataTable<TData extends DataItem, TValue>({
     });
   };
 
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setIsDragOver(false);
+    const droppedFile = event.dataTransfer.files[0];
+    setFile(droppedFile);
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files ? event.target.files[0] : null;
+    setFile(selectedFile);
+  };
+
   return (
     <div>
       <div>
@@ -255,54 +277,65 @@ export function DataTable<TData extends DataItem, TValue>({
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle className="text-center">
-                    Importing Data
+                  <DialogTitle className="text-center mb-2">
+                    Upload File
                   </DialogTitle>
                   <DialogDescription>
-                    <div className="flex items-center justify-center w-full mt-4">
-                      <label
-                        htmlFor="dropzone-file"
-                        className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500"
-                      >
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                          <svg
-                            className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M7 16V12m0 0V8m0 4h4m4 0h.01M20 12h.01M4 12h.01M12 20l4-4m-8 4l4-4"
-                            ></path>
-                          </svg>
-                          <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                            <span className="font-semibold">Click to upload</span> or drag and drop
-                          </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
-                            XLS or XLSX files only
-                          </p>
-                        </div>
-                        <Input
-                          id="dropzone-file"
-                          type="file"
-                          accept=".xls,.xlsx"
-                          className="hidden"
-                          onChange={(e) =>
-                            setFile(e.target.files ? e.target.files[0] : null)
-                          }
-                        />
-                      </label>
+                    <div
+                      className={`border-2 border-dashed rounded-lg p-6 cursor-pointer ${
+                        isDragOver
+                          ? "bg-gray-200 dark:bg-gray-600 border-gray-400 dark:border-gray-500"
+                          : "bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500"
+                      }`}
+                      onDragOver={handleDragOver}
+                      onDragLeave={handleDragLeave}
+                      onDrop={handleDrop}
+                      onClick={() =>
+                        document.getElementById("dropzone-file")?.click()
+                      }
+                    >
+                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        <svg
+                          className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M7 16V12m0 0V8m0 4h4m4 0h.01M20 12h.01M4 12h.01M12 20l4-4m-8 4l4-4"
+                          ></path>
+                        </svg>
+                        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                          <span className="font-semibold">Click to upload</span>{" "}
+                          or drag and drop
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          XLS or XLSX files only
+                        </p>
+                      </div>
+                      <Input
+                        id="dropzone-file"
+                        type="file"
+                        accept=".xls,.xlsx"
+                        className="hidden"
+                        onChange={handleInputChange}
+                      />
                     </div>
+                    {file && (
+                      <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+                        Selected file: {file.name}
+                      </p>
+                    )}
                     <Button
-                      onClick={handleFileUpload}
+                      onClick={() => handleFileUpload(file)}
                       disabled={loading}
                       className="w-full mt-4"
                     >
-                      {loading ? "Uploading in progress..." : " Upload"}
+                      {loading ? "Uploading in progress..." : "Upload"}
                     </Button>
                   </DialogDescription>
                 </DialogHeader>
@@ -325,14 +358,14 @@ export function DataTable<TData extends DataItem, TValue>({
             </div>
           )}
         </div>
-          <Input
-            placeholder="Search by vessel"
-            value={(table.getColumn(vesselKey)?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn(vesselKey)?.setFilterValue(event.target.value)
-            }
-            className="flex w-full md:hidden"
-          />
+        <Input
+          placeholder="Search by vessel"
+          value={(table.getColumn(vesselKey)?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn(vesselKey)?.setFilterValue(event.target.value)
+          }
+          className="flex w-full md:hidden"
+        />
       </div>
       <div className="rounded-md border w-full">
         <Table className="whitespace-nowrap">
