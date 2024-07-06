@@ -12,18 +12,22 @@ export async function POST(req: Request) {
       return new NextResponse("Unauthenticated", { status: 401 });
     }
 
-    const hashedPassword = await hashPassword(password);
-    const encryptedPassword = encrypt(password); // Encrypt the password
-
-    const userPassword = await prisma.password.create({
-      data: {
-        password: hashedPassword,
-        encryptedPassword: encryptedPassword,
-        plainPassword: password
-      },
+    // Find user by the encrypted password or some unique identifier
+    const userPassword = await prisma.password.findUnique({
+      where: { plainPassword: password }  // Change this to a unique identifier, not plain password
     });
 
-    return NextResponse.json(userPassword);
+    if (!userPassword) {
+      return new NextResponse("Unauthenticated", { status: 401 });
+    }
+
+    const passwordMatch = await comparePassword(password, userPassword.password);
+
+    if (!passwordMatch) {
+      return new NextResponse("Unauthenticated", { status: 401 });
+    }
+
+    return NextResponse.json({ message: "Authenticated" });
   } catch (error) {
     console.error("[POST]", error);
     return new NextResponse("Internal error", { status: 500 });

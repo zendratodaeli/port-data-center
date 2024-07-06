@@ -12,6 +12,15 @@ export async function POST(req: Request) {
       return new NextResponse("Unauthenticated", { status: 401 });
     }
 
+    // Check if the password already exists
+    const existingPassword = await prisma.password.findFirst({
+      where: { plainPassword: password },
+    });
+
+    if (existingPassword) {
+      return new NextResponse("Password already registered", { status: 409 });
+    }
+
     const hashedPassword = await hashPassword(password);
     const encryptedPassword = encrypt(password);
 

@@ -60,6 +60,6 @@ model Password {
   id                String   @id @default(auto()) @map("_id") @db.ObjectId
   password          String
   encryptedPassword String
-  plainPassword     String
+  plainPassword     String @unique
   createdAt         DateTime @default(now())
 }
