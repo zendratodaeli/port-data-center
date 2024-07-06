@@ -324,6 +324,7 @@ export function DataTable<TData extends DataItem, TValue>({
               </select>
             </div>
           )}
+        </div>
           <Input
             placeholder="Search by vessel"
             value={(table.getColumn(vesselKey)?.getFilterValue() as string) ?? ""}
@@ -332,7 +333,6 @@ export function DataTable<TData extends DataItem, TValue>({
             }
             className="flex w-full md:hidden"
           />
-        </div>
       </div>
       <div className="rounded-md border w-full">
         <Table className="whitespace-nowrap">
