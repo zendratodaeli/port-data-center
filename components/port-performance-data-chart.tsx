@@ -23,7 +23,7 @@ const PortPerformanceDataChart: React.FC<PortPerformanceDataChartProps> = ({ dat
           left: -15,
           bottom: 0,
         }}
-        className='overflow-x-auto'
+        className=''
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name" />

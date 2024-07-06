@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import { transformDataForChart } from "@/actions/transform-data";
@@ -49,6 +49,7 @@ const PortPerformanceDataChartWithToggle: React.FC<PortPerformanceDataChartWithT
 
   useEffect(() => {
     const transformedData = transformDataForChart(totalVessels, dataPeriod);
+    console.log('Transformed Data:', transformedData);  // Debugging log
     setChartData(transformedData);
   }, [dataPeriod, totalVessels]);
 
