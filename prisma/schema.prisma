@@ -57,6 +57,9 @@ model User {
 }
 
 model Password {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  password  String
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  password          String
+  encryptedPassword String
+  plainPassword     String
+  createdAt         DateTime @default(now())
 }

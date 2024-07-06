@@ -15,7 +15,7 @@ const LoginPage = () => {
     try {
       const res = await axios.post('/api/login', { password });
       if (res.status === 200) {
-        router.push('/'); // Redirect to the dashboard or any protected route after successful login
+        router.push('/');
         alert("Success")
       }
     } catch (err) {
