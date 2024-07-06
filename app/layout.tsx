@@ -6,7 +6,6 @@ import { ToasterProvider } from "@/providers/toast-provider";
 import { neobrutalism } from "@clerk/themes";
 import CheckAccess from "@/components/check-access";
 
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {

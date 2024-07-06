@@ -3,13 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { redirect } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
 const RegisterForm: React.FC = () => {
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -24,6 +23,7 @@ const RegisterForm: React.FC = () => {
 
       if (response.ok) {
         toast.success("Registration success");
+        setPassword("")
       } else {
         toast.error("Registration failed");
       }
@@ -49,7 +49,7 @@ const RegisterForm: React.FC = () => {
           required
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         />
-        <Button type="submit">Register</Button>
+        <Button type="submit" className="mt-3">Register</Button>
       </form>
     </div>
   );
