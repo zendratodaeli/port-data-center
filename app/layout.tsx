@@ -4,6 +4,7 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ToasterProvider } from "@/providers/toast-provider";
 import { neobrutalism } from "@clerk/themes";
+import CheckAccess from "@/components/check-access";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -25,6 +26,7 @@ export default function RootLayout({
       }}
     >
       <html lang="en">
+        <CheckAccess/>
         <body>
           <ToasterProvider />
           {children}

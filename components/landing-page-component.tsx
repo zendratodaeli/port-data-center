@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import TypewriterComponent from "typewriter-effect";
 import Image from "next/image";
 import LandingPageExternalComponent from "./landing-page-external-component";
+import { Separator } from "./ui/separator";
 
 const LandingPageComponent = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -20,34 +21,34 @@ const LandingPageComponent = () => {
 
   return (
     <div>
-      <div className="h-screen flex flex-col md:flex-row justify-between">
+      <div className=" md:h-screen flex flex-col md:flex-row justify-between">
         <div className="w-full h-[20rem] relative">
           <div className="bg-[url('/background.jpg')] bg-cover h-[30rem] pl-48 md:flex items-center shadow-2xl relative z-10">
             <div className="absolute inset-0 grid-pattern z-0"></div>
           </div>
-          <div className="h-[200px] bg-blue-700 w-[300px] md:w-[500px] mx-auto mt-[-80px] rounded-3xl relative z-20">
+          <div className="h-[200px] bg-blue-700 w-[300px] md:w-[700px] mx-auto mt-[-80px] rounded-3xl relative z-20">
             <NavbarLadingPage />
             <div className="text-center text-xl font-serif text-white mt-2">
               Welcome to
             </div>
-            <div className="text-center text-6xl font-serif text-white mt-2">
+            <div className="text-center text-4xl lg:text-6xl font-serif text-white mt-2">
               Port Data Center
             </div>
           </div>
         </div>
       </div>
       
-      <LandingPageExternalComponent />
+      {/* <LandingPageExternalComponent /> */}
 
       <motion.div
         ref={ref}
-        className="h-screen"
+        className="h-screen mt-80 lg:mt-0"
         style={{
           scale: scaleProgress,
           opacity: scrollYProgress,
         }}
       >
-        <main className="flex-grow mx-auto mt-5 p-6 w-full font-mono">
+        <main className="flex-grow mx-auto p-6 w-full font-mono">
           <section className="text-center mb-10 space-y-2">
             <h1 className="text-black text-4xl md:text-8xl font-bold">
               Uploading 
