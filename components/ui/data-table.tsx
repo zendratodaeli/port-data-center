@@ -38,7 +38,11 @@ import {
 import { Heading } from "./heading";
 import { useUser } from "@clerk/nextjs";
 
-interface DataTableProps<TData, TValue> {
+interface DataItem {
+  [key: string]: any;
+}
+
+interface DataTableProps<TData extends DataItem, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   vesselKey: string;
@@ -46,7 +50,7 @@ interface DataTableProps<TData, TValue> {
   portKey: string;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends DataItem, TValue>({
   columns,
   data,
   vesselKey,
@@ -59,7 +63,9 @@ export function DataTable<TData, TValue>({
   );
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-  const [filteredData, setFilteredData] = useState<TData[]>(data); // Track filtered data
+  const [filteredData, setFilteredData] = useState<TData[]>(data);
+  const [selectedPort, setSelectedPort] = useState<string | null>(null);
+  const [availablePorts, setAvailablePorts] = useState<string[]>([]);
 
   const router = useRouter();
 
@@ -91,7 +97,11 @@ export function DataTable<TData, TValue>({
   useEffect(() => {
     setIsMounted(true);
     setDateFilter(format(new Date(), "yyyy-MM-dd"));
-  }, []);
+
+    // Extract unique ports from the data
+    const ports = Array.from(new Set(data.map((item) => item[portKey])));
+    setAvailablePorts(ports);
+  }, [data, portKey]);
 
   useEffect(() => {
     setFilteredData(
@@ -193,13 +203,29 @@ export function DataTable<TData, TValue>({
     return null;
   }
 
+  const handlePortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const port = event.target.value;
+    setSelectedPort(port);
+
+    setColumnFilters((old) => {
+      const newFilters = old.filter((filter) => filter.id !== portKey);
+      if (port) {
+        newFilters.push({
+          id: portKey,
+          value: port,
+        });
+      }
+      return newFilters;
+    });
+  };
+
   return (
     <div>
       <div>
-        <h2 className=" text-xl md:text-3xl font-bold tracking-tight">
+        <h2 className="text-xl md:text-3xl font-bold tracking-tight">
           Total {`(${filteredData.length})`}
         </h2>
-        <p className=" text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           {"Current vessels at the port"}
         </p>
       </div>
@@ -219,84 +245,95 @@ export function DataTable<TData, TValue>({
             onChange={handleDateChange}
             className="w-[144px]"
           />
-          {!isAdmin 
-          ? 
-            (
-              <Dialog>
-                <DialogTrigger>
-                  <Button className="w-[115.84px] md:w-[150px]">
-                    <Plus className=" mr-2 h-4 w-4" />
-                    Import
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle className="text-center">
-                      Importing Data
-                    </DialogTitle>
-                    <DialogDescription>
-                      <div className="flex items-center justify-center w-full mt-4">
-                        <label
-                          htmlFor="dropzone-file"
-                          className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
-                        >
-                          <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                            <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                              <span className="font-semibold">
-                                Click to upload
-                              </span>{" "}
-                              or drag and drop
-                            </p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">
-                              XLS or XLSX files only
-                            </p>
-                          </div>
-                          <Input
-                            id="dropzone-file"
-                            type="file"
-                            accept=".xls,.xlsx"
-                            className="hidden"
-                            onChange={(e) =>
-                              setFile(e.target.files ? e.target.files[0] : null)
-                            }
-                          />
-                        </label>
-                      </div>
-                      <Button
-                        onClick={handleFileUpload}
-                        disabled={loading}
-                        className="w-full mt-4"
+          {!isAdmin ? (
+            <Dialog>
+              <DialogTrigger>
+                <Button className="w-[115.84px] md:w-[150px]">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Import
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle className="text-center">
+                    Importing Data
+                  </DialogTitle>
+                  <DialogDescription>
+                    <div className="flex items-center justify-center w-full mt-4">
+                      <label
+                        htmlFor="dropzone-file"
+                        className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500"
                       >
-                        {loading ? "Uploading on progress..." : " Upload"}
-                      </Button>
-                    </DialogDescription>
-                  </DialogHeader>
-                </DialogContent>
-              </Dialog>
-            )
-          :
-          (
-            <Input
-            placeholder="Search by port"
-            value={(table.getColumn(portKey)?.getFilterValue() as string) ?? ""}
+                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                          <svg
+                            className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M7 16V12m0 0V8m0 4h4m4 0h.01M20 12h.01M4 12h.01M12 20l4-4m-8 4l4-4"
+                            ></path>
+                          </svg>
+                          <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                            <span className="font-semibold">Click to upload</span> or drag and drop
+                          </p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                            XLS or XLSX files only
+                          </p>
+                        </div>
+                        <Input
+                          id="dropzone-file"
+                          type="file"
+                          accept=".xls,.xlsx"
+                          className="hidden"
+                          onChange={(e) =>
+                            setFile(e.target.files ? e.target.files[0] : null)
+                          }
+                        />
+                      </label>
+                    </div>
+                    <Button
+                      onClick={handleFileUpload}
+                      disabled={loading}
+                      className="w-full mt-4"
+                    >
+                      {loading ? "Uploading in progress..." : " Upload"}
+                    </Button>
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+          ) : (
+            <div className="flex gap-2 justify-between">
+              <select
+                value={selectedPort ?? ""}
+                onChange={handlePortChange}
+                className="w-full p-2 border rounded"
+              >
+                <option value="">All Ports</option>
+                {availablePorts.map((port) => (
+                  <option key={port} value={port}>
+                    {port}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+          <Input
+            placeholder="Search by vessel"
+            value={(table.getColumn(vesselKey)?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
-              table.getColumn(portKey)?.setFilterValue(event.target.value)
+              table.getColumn(vesselKey)?.setFilterValue(event.target.value)
             }
-            className="w-full md:w-[350px]"
+            className="flex w-full md:hidden"
           />
-          )
-        }
         </div>
-        <Input
-          placeholder="Search by vessel"
-          value={(table.getColumn(vesselKey)?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn(vesselKey)?.setFilterValue(event.target.value)
-          }
-          className="flex w-full md:hidden"
-        />
       </div>
-
       <div className="rounded-md border w-full">
         <Table className="whitespace-nowrap">
           <TableHeader>
@@ -353,7 +390,6 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-
       <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant="outline"
