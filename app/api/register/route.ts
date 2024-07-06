@@ -14,27 +14,25 @@ export async function POST(req: Request) {
 
     // Check if the password already exists
     const existingPassword = await prisma.password.findFirst({
-      where: { plainPassword: password },
+      where: { password: password },
     });
 
     if (existingPassword) {
       return new NextResponse("Password already registered", { status: 409 });
     }
 
-    const hashedPassword = await hashPassword(password);
-    const encryptedPassword = encrypt(password);
+    // const hashedPassword = await hashPassword(password);
 
     const userPassword = await prisma.password.create({
       data: {
-        password: hashedPassword,
-        encryptedPassword: encryptedPassword,
-        plainPassword: password
+        password: password
+        
       },
     });
 
     return NextResponse.json(userPassword);
   } catch (error) {
-    console.log("[data_post]", error);
+    console.log("[register_post]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }

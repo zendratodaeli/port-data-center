@@ -56,10 +56,10 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
+  // encryptedPassword String
+  // plainPassword     String @unique
 model Password {
   id                String   @id @default(auto()) @map("_id") @db.ObjectId
-  password          String
-  encryptedPassword String
-  plainPassword     String @unique
+  password          String    @unique
   createdAt         DateTime @default(now())
 }

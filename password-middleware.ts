@@ -1,16 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.TOKEN_SECRET;
 
 export function middleware(req: NextRequest) {
   const { cookies } = req;
-  const accessGranted = cookies.get('access_granted');
+  const token = cookies.get('access_granted')?.value;
 
-  if (!accessGranted) {
+  if (!token) {
     return NextResponse.redirect(new URL('/login', req.url));
   }
 
-  return NextResponse.next();
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET!);
+    return NextResponse.next();
+  } catch (error) {
+    return NextResponse.redirect(new URL('/login', req.url));
+  }
 }
 
 export const config = {
-  matcher: ['/', ], // Add more routes if needed
+  matcher: ['/', ],
 };
