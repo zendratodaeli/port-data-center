@@ -9,6 +9,7 @@ datasource db {
 
 model Port {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String
   portName  String
   datas     Data[]
   createdAt DateTime @default(now())

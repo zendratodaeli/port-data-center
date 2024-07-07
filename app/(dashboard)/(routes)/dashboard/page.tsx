@@ -22,18 +22,37 @@ const DashboardPage = async () => {
     redirect("/data")
   }
 
-  const totalPorts = await prisma.port.findMany();
-  const totalVessels = await prisma.data.findMany();
   
   const start = startOfToday();
   const end = endOfToday();
 
+  const port = await prisma.port.findMany({
+    where: {
+      userId: userId
+    }
+  })
+  
+  const portIds = port.map(port => port.id);
+
+  const portName = port.map(port => port.portName)
+  
+  const totalVessels = await prisma.data.findMany({
+    where: {
+      portId: {
+        in: portIds
+      }
+    }
+  });
+  
   const vesselsToday = await prisma.data.findMany({
     where: {
       createdAt: {
         gte: start,
         lte: end,
       },
+      portId: {
+        in: portIds
+      }
     },
   });
 
@@ -41,8 +60,8 @@ const DashboardPage = async () => {
     <div className="space-y-4 p-8 pt-6">
       <VesselAndPortCard
         totalVessel={totalVessels.length}
-        totalPort={totalPorts.length}
         currentVessel={vesselsToday.length}
+        portName={portName.join('')}
       />
       <PortPerformanceDataChartWithToggle totalVessels={totalVessels} />
     </div>

@@ -35,7 +35,7 @@ const DataClient: React.FC<DataClientProps> = ({ data }) => {
   return (
     <>
       <div className="flex items-center justify-between">
-        <Heading title={`Data`} description="Manage your data" />
+        <Heading title={`Data of Vessel`} description="Manage your data" />
         {!isAdmin && (
           <Button onClick={() => router.push(`/data/new`)} className="md:w-[150px]">
             <Plus className="mr-2 h-4 w-4" />

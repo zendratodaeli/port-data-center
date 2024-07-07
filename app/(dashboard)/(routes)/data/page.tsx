@@ -24,10 +24,23 @@ const DataPage = async () => {
     Object.values(admin).includes(userId)
   );
 
+  const port = await prisma.port.findMany({
+    where: {
+      userId: userId
+    }
+  })
+
+  const portIds = port.map(port => port.id);
+  
   let data;
 
   if (userId && isAdmin) {
     data = await prisma.data.findMany({
+      where: {
+        portId: {
+          in: portIds
+        }
+      },
       include: {
         port: true,
       },
