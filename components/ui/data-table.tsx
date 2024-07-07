@@ -57,7 +57,6 @@ export function DataTable<TData extends DataItem, TValue>({
   dateKey,
   portKey,
 }: DataTableProps<TData, TValue>) {
-  
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [dateFilter, setDateFilter] = useState<string | undefined>(
     format(new Date(), "yyyy-MM-dd")

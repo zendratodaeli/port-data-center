@@ -1,4 +1,3 @@
-import NavbarLadingPage from '@/components/navbar-landing-page';
 import prisma from '@/lib/prismadb';
 import React from 'react'
 

@@ -3,6 +3,7 @@ import prisma from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs/server";
 import DataClient from "./components/client";
 import { DataColumn } from "./components/columns";
+import DownloadButton from "@/components/download-button";
 
 const DataPage = async () => {
   const { userId } = auth();
@@ -89,10 +90,12 @@ const DataPage = async () => {
     createdAt: format(eachData.createdAt, "MMMM do, yyyy"),
   }));
 
+
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
         <DataClient data={formattedData} />
+        <DownloadButton data={formattedData} />
       </div>
     </div>
   );
