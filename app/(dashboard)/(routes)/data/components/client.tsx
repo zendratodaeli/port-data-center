@@ -9,6 +9,7 @@ import { DataColumn, columns } from "./columns";
 import { DataTable } from "@/components/ui/data-table";
 import { Heading } from "@/components/ui/heading";
 import { useUser } from "@clerk/nextjs";
+import Link from "next/link";
 
 interface DataClientProps {
   data: DataColumn[];
@@ -45,6 +46,22 @@ const DataClient: React.FC<DataClientProps> = ({ data }) => {
       </div>
       <Separator />
       <DataTable vesselKey="vesselName" dateKey="createdAt" portKey="port" columns={columns} data={data} />
+      <div>
+        <h1 className=" text-red-600 font-extrabold">Attention!</h1>
+        <p className=" underline hover:font-bold cursor-pointer">
+          Template File
+        </p>
+        <Link
+        href="./template-file.xlsx" 
+        target="_blank" 
+        rel="nooponer noreferrer"
+        className=" font-bold text-slate-700 hover:text-slate-400"
+        >
+        <Button>
+          Download
+        </Button>
+      </Link>
+      </div>
     </>
   );
 };
