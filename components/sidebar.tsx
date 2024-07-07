@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
-import { Database, HomeIcon, LayoutDashboard } from "lucide-react";
+import { Database, HomeIcon, LayoutDashboard, List } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { Separator } from "./ui/separator";
@@ -37,12 +37,20 @@ const SideBar = () => {
   ];
 
   if (userId && isAdmin) {
-    routes.unshift({
+    routes.unshift(
+      {
       href: `/dashboard`,
       label: "Dashboard",
       icon: LayoutDashboard,
       color: "text-black",
-    });
+      },
+      {
+        href: `/register`,
+        label: "Register",
+        icon: List,
+        color: "text-black",
+      },
+  );
   }
 
   return (

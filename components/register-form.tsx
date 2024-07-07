@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 
 const RegisterForm: React.FC = () => {
   const [password, setPassword] = useState("");
+  const [userName, setUserName] = useState("");
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -17,12 +18,13 @@ const RegisterForm: React.FC = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ password, userName }),
       });
 
       if (response.ok) {
         toast.success("Registration success");
-        setPassword("")
+        setPassword("");
+        setUserName("");
       } else {
         toast.error("Registration failed");
       }
@@ -34,6 +36,20 @@ const RegisterForm: React.FC = () => {
   return (
     <div className="flex justify-center items-center text-center z-50 bg-blue-50 p-10 shadow-2xl rounded-lg">
       <form onSubmit={handleSubmit}>
+      <Label
+          htmlFor="userName"
+          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        >
+          Username:
+        </Label>
+        <Input
+          type="text"
+          id="userName"
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
+          required
+          className="bg-gray-50 border text-center border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
         <Label
           htmlFor="password"
           className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"

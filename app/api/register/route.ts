@@ -6,7 +6,7 @@ import { encrypt } from "@/lib/encryption";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { password } = body;
+    const { password, userName } = body;
 
     if (!password) {
       return new NextResponse("Unauthenticated", { status: 401 });
@@ -25,8 +25,8 @@ export async function POST(req: Request) {
 
     const userPassword = await prisma.password.create({
       data: {
-        password: password
-        
+        password: password,
+        userName: userName
       },
     });
 

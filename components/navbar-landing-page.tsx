@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const NavbarLadingPage = () => {
   return (
-    <div className=" bg-slate-100 shadow-lg">
+    <div className=" bg-slate-50">
       <div className="flex justify-center p-5 shadow-lg">
         <div className="flex items-center">
           <div>

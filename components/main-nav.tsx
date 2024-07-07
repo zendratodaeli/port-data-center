@@ -30,11 +30,18 @@ export const MainNav = ({
   ];
 
   if (userId && isAdmin) {
-    routes.unshift({
+    routes.unshift(
+      {
       href: `/dashboard`,
       label: "Dashboard",
       active: pathname === `/dashboard`,
-    });
+      },
+      {
+        href: `/register`,
+        label: "Register",
+        active: pathname === `/register`,
+      },
+  );
   }
 
   return (

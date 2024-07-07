@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import cookie from "js-cookie";
 
 const LoginPage = () => {
+  const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -18,7 +19,7 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post("/api/login", { password });
+      const res = await axios.post("/api/login", { userName, password });
       if (res.status === 200) {
         cookie.set("access_password", password, {
           expires: new Date(Date.now() + 3600 * 1000), // 1 hour in milliseconds
@@ -40,6 +41,17 @@ const LoginPage = () => {
   return (
     <div className="flex justify-center mt-16 text-center z-50">
       <form onSubmit={handleSubmit}>
+        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          Username:
+        </label>
+        <Input
+          type="text"
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
+          required
+          disabled={loading}
+          className="bg-gray-50 border text-center border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
           Password:
         </label>
