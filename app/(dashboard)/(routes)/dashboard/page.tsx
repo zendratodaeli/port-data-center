@@ -9,8 +9,8 @@ const DashboardPage = async () => {
   const { userId } = auth();
 
   const listAdminId = [
-    { adminId1: "user_2il1XkfhJFtxhMslrBq1JK6PapV" },
-    { adminId2: "user_2il3sWCyhA35P1GvOuVsaPEsyrr" },
+    { adminId1: process.env.NEXT_PUBLIC_ADMIN_ID1! },
+    { adminId2: process.env.NEXT_PUBLIC_ADMIN_ID2! },
   ];
 
   const isAdmin = listAdminId.some((admin) =>
