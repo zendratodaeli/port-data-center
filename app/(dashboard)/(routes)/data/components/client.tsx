@@ -57,7 +57,7 @@ const DataClient: React.FC<DataClientProps> = ({ data }) => {
           </DrawerTrigger>
           <DrawerContent className="">
             <DrawerHeader>
-              <DrawerDescription className=" flex justify-center items-center gap-4">
+              <DrawerDescription className=" flex flex-col md:flex-row justify-center items-center gap-4">
                 {!isAdmin && (
                   <Button
                     onClick={() => router.push(`/data/new`)}

@@ -1,4 +1,6 @@
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { Button } from "@/components/ui/button";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
+import { LogIn } from "lucide-react";
 import Link from "next/link";
 
 const NavbarLadingPage = () => {
@@ -8,52 +10,31 @@ const NavbarLadingPage = () => {
         <div className="flex items-center">
           <div>
             <SignedIn>
-              <div className="grid  place-content-center bg-slate-900 p-4 rounded-full">
-                <DrawOutlineButton>
-                  <Link href={"/data"}>Go to Data</Link>
-                </DrawOutlineButton>
+              <div className=" flex justify-center m-2">
+                <Link
+                  href="/data"
+                  className="w-full text-center rounded-3xl bg-neutral-900 px-9 py-4 text-xl text-white transition-colors hover:bg-neutral-700 md:w-fit"
+                >
+                  Go to Data <LogIn className="inline" />
+                </Link>
               </div>
             </SignedIn>
           </div>
         </div>
         <div>
           <SignedOut>
-            <div className="grid  place-content-center bg-slate-900 p-4 rounded-full">
-              <DrawOutlineButton>
-                <Link href={"/sign-in"}>Login</Link>
-              </DrawOutlineButton>
+            <div className=" flex justify-center m-2">
+              <Link
+                href="/sign-in"
+                className="w-full text-center rounded-3xl bg-neutral-900 px-9 py-4 text-xl text-white transition-colors hover:bg-neutral-700 md:w-fit"
+              >
+                Login <LogIn className="inline" />
+              </Link>
             </div>
           </SignedOut>
         </div>
       </div>
     </div>
-  );
-};
-
-interface DrawOutlineButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode;
-}
-
-const DrawOutlineButton: React.FC<DrawOutlineButtonProps> = ({
-  children,
-  ...rest
-}) => {
-  return (
-    <button
-      {...rest}
-      className="group relative px-4 py-2 font-medium text-slate-100 transition-colors duration-[400ms] hover:text-indigo-300 rounded-full"
-    >
-      <span>{children}</span>
-{/* 
-      TOP
-      <span className="absolute left-0 top-0 h-[2px] w-0 bg-indigo-300 transition-all duration-100 group-hover:w-full rounded-full" />
-
-      <span className="absolute right-0 top-0 h-0 w-[2px] bg-indigo-300 transition-all delay-100 duration-100 group-hover:h-full rounded-full" />
-<span className="absolute bottom-0 right-0 h-[2px] w-0 bg-indigo-300 transition-all delay-200 duration-100 group-hover:w-full rounded-full" />
-
-      <span className="absolute bottom-0 left-0 h-0 w-[2px] bg-indigo-300 transition-all delay-300 duration-100 group-hover:h-full rounded-full" /> */}
-    </button>
   );
 };
 
