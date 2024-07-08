@@ -1,4 +1,3 @@
-import prisma from '@/lib/prismadb';
 import React from 'react'
 
 const LandingLayout = async ({
