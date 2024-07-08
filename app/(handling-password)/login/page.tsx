@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -13,6 +13,22 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const checkPassword = async () => {
+      try {
+        const res = await axios.get('/api/check-access');
+        if (res.status === 200) {
+          router.push('/');
+        }
+      } catch (error) {
+        console.error('API error:', error);
+        router.push('/login');
+      }
+    };
+
+    checkPassword();
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,6 +56,7 @@ const LoginPage = () => {
 
   return (
     <div className="flex justify-center mt-16 text-center z-50">
+      
       <form onSubmit={handleSubmit}>
         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
           Username:
