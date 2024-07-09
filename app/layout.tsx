@@ -26,7 +26,7 @@ export default function RootLayout({
     >
       <html lang="en">
         <body>
-        <CheckAccess/>
+        {/* <CheckAccess/> */}
           <ToasterProvider />
           {children}
         </body>
