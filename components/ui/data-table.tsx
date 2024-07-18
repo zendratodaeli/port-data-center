@@ -270,7 +270,7 @@ export function DataTable<TData extends DataItem, TValue>({
           {!isAdmin ? (
             <Dialog>
               <DialogTrigger>
-                <Button className="w-[115.84px] md:w-[150px]">
+                <Button className="w-[115.84px] md:w-[150px]" variant={"outline"}>
                   <Plus className="mr-2 h-4 w-4" />
                   Import
                 </Button>

@@ -34,7 +34,7 @@ const LandingPageComponent: React.FC = () => {
       >
         <Content />
       </TextParallaxContent>
-      <TextParallaxContent
+      {/* <TextParallaxContent
         mediaUrl="/video.mp4"
         subheading="Here is how you can successfully accomplish this with precision
                   and confidence."
@@ -48,7 +48,7 @@ const LandingPageComponent: React.FC = () => {
             Go Up <ArrowUp className="inline" />
           </a>
         </div>
-      </TextParallaxContent>
+      </TextParallaxContent> */}
     </div>
   );
 };

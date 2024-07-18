@@ -50,7 +50,7 @@ const DataClient: React.FC<DataClientProps> = ({ data }) => {
         <Heading title={`Data of Vessel`} description="Manage your data" />
         <Drawer>
           <DrawerTrigger>
-            <Button>
+            <Button variant={"outline"}>
               <Option className="mr-2 h-4 w-4"/>
               Options
             </Button>
@@ -61,10 +61,10 @@ const DataClient: React.FC<DataClientProps> = ({ data }) => {
                 {!isAdmin && (
                   <Button
                     onClick={() => router.push(`/data/new`)}
-                    className="md:w-[150px]"
+                    className="md:w-[170px]"
                   >
                     <Plus className="mr-2 h-4 w-4" />
-                    Add Data
+                    Add Data Manual
                   </Button>
                 )}
                 <div>

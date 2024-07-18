@@ -21,12 +21,12 @@ export default function RootLayout({
   return (
     <ClerkProvider
       appearance={{
-        baseTheme: neobrutalism
+        baseTheme: neobrutalism,
       }}
     >
       <html lang="en">
         <body>
-        <CheckAccess/>
+          {/* <CheckAccess /> */}
           <ToasterProvider />
           {children}
         </body>

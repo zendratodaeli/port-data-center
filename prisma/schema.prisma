@@ -57,12 +57,12 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
-  // encryptedPassword String
-  // plainPassword     String @unique
+// encryptedPassword String
+// plainPassword     String @unique
 model Password {
-  id                String   @id @default(auto()) @map("_id") @db.ObjectId
-  userName          String
-  password          String    @unique
-  createdAt         DateTime @default(now())
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userName  String
+  password  String   @unique
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
